@@ -18,9 +18,22 @@
     "babel-preset-react-native": "2.1.0",
     "jest": "20.0.4",
     "react": "^16.0.0-alpha.12",
+    "react-navigation": "^1.0.0-beta.11",
     "react-test-renderer": "16.0.0-alpha.12"
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "description": "node版本：6.0以上\r   * Java sdk\r   * android sdk\r   * android studio\r   * react-native-cli",
+  "main": "index.android.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/highmind/react-native-movie.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/highmind/react-native-movie/issues"
+  },
+  "homepage": "https://github.com/highmind/react-native-movie#readme"
 }
