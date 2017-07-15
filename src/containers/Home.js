@@ -95,7 +95,7 @@ export default class Home extends Component {
                  <View style={styles.itemWrap}>
 
                    <View style={styles.item1}>
-                     <Image source={{uri:item.images.small}} style={{width:65, height: 100}} />
+                     <Image source={{uri:item.images.medium}} style={{width:65, height: 100}} />
                    </View>
 
                    <View style={styles.item3}>

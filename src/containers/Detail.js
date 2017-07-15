@@ -5,7 +5,8 @@ import {
   View,
   Image,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from 'react-native';
 
 import { Toast, Icon } from 'antd-mobile';
@@ -13,20 +14,18 @@ import { layoutStyles } from './layout';
 import * as utils from '../utils';
 const styles = StyleSheet.create({
   container:{
-    flex:1
+    flex:1,
+    backgroundColor:'#fff'
   },
-  open:{
-    height:100
-  },
-  close:{
-    height:30
+  test:{
+    width:100,
+    height:100,
+    marginLeft:10,
+    backgroundColor:'blue'
   },
   head:{
-    paddingTop:20,
-    paddingLeft:20,
-    paddingBottom:20,
-    paddingRight:20,
-    backgroundColor:'rgba(0,0,0,0.8)'
+    padding:20,
+    backgroundColor:'rgba(0,0,0,0.6)'
   },
   movieName:{
     fontSize:18
@@ -53,6 +52,9 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'orange',
     borderStyle:'solid',
+  },
+   horizontalScrollView: {
+    height: 200,
   },
   btnText : {
     fontSize:16,
@@ -109,8 +111,75 @@ class Detail extends Component{
     });
   }
 
-  render(){
+  getActorImg(data){
+      console.log('...getActorImg...');
+      let nodes = <Text>暂无数据</Text>;
+      if(data.length != 0){
+        nodes = data.map((dData, index) => {
+          let imgData = require('../assets/actor.png');
 
+          if(dData.avatars != null){ //接口数据avatars为null
+            imgData = {uri:dData.avatars.medium};
+          }
+
+          return(
+              <View style={{padding:6,width:110}} key={index}>
+                  <Image source={imgData} style={{width:100, height: 139}} />
+                  <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.name}</Text>
+              </View>
+          )
+       });
+     }
+
+      return(
+        <View>
+          <ScrollView horizontal={true}
+           style={styles.horizontalScrollView}
+          showsHorizontalScrollIndicator={false}>
+            {nodes}
+          </ScrollView>
+        </View>  
+      )
+
+    }
+
+    getVideo(data){
+      console.log('...getActorImg...');
+      let nodes = <Text>暂无数据</Text>;
+      if(data.length != 0){
+        nodes = data.map((dData, index) => {
+          let imgData = require('../assets/actor.png');
+
+          if(dData.medium != ''){ //接口数据avatars为null
+            imgData = {uri:dData.medium};
+          }
+
+          return(
+              <View style={{marginLeft:6,width:180}} key={index}>
+                  <Image source={imgData} style={{width:180, height: 101}} />
+                  <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.title}</Text>
+              </View>
+          )
+       });
+     }
+      return(
+            <View>
+              <ScrollView horizontal={true}
+                style={styles.horizontalScrollView}
+                showsHorizontalScrollIndicator={false}>
+                  {nodes}
+                </ScrollView>
+            </View>
+                
+            )
+
+    }
+
+
+  render(){
+    let summaryStyle = this.state.isOpen ? 8 : 4;
+    let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
+    <Icon type="down" size="md" color="black" />;
     let {
       images = [],
       title,
@@ -124,44 +193,59 @@ class Detail extends Component{
       summary,
       popular_reviews=[],
       genres = [],
-      casts = []
+      casts = [],
+      directors = [],
+      trailers = [],
+      bloopers = [],
+      clips = []
+
     } = this.state.data;
 
+    let actorImgNode = this.getActorImg([...casts,...directors]);
+    let videoNode = this.getVideo([...trailers,...bloopers,...clips])
     return (
       <View style={styles.container}>
-      <ImageBackground source={{uri:images.medium}}>
-        <View style={[layoutStyles.flexRow, styles.head]}>
+      <ScrollView>
+        <ImageBackground source={{uri:images.medium}}>
+          <View style={[layoutStyles.flexRow, styles.head]}>
 
-          <View style={layoutStyles.flex1}>
-              <Image source={{uri:images.medium}} style={{width:100, height: 139}} />
+            <View style={layoutStyles.flex1}>
+                <Image source={{uri:images.large}} style={{width:100, height: 139}} />
+            </View>
+
+            <View style={layoutStyles.flex2}>
+              <Text style={styles.whiteTxt}>
+                <Text style={styles.movieName}>{title}{'\n'}</Text>
+                <Text>{aka[0]}{'\n'}</Text>
+                <Text style={styles.score}>{rating.average==0?'暂无评分':`${rating.average}分`}{'\n'}</Text>
+                <Text>{utils.getGenres(genres)}{'\n'}</Text>
+                <Text>{countries[0]} {durations[durations.length-1]}{'\n'}</Text>
+                <Text>{pubdate} 大陆上映 </Text>
+              </Text>
+            </View>
+
           </View>
+        </ImageBackground>
 
-          <View style={layoutStyles.flex2}>
-            <Text style={styles.whiteTxt}>
-              <Text style={styles.movieName}>{title}{'\n'}</Text>
-              <Text>{aka[0]}{'\n'}</Text>
-              <Text style={styles.score}>{rating.average==0?'暂无评分':`${rating.average}分`}{'\n'}</Text>
-              <Text>{utils.getGenres(genres)}{'\n'}</Text>
-              <Text>{countries[0]} {durations[durations.length-1]}{'\n'}</Text>
-              <Text>{pubdate} 大陆上映 </Text>
-            </Text>
+          <View style={styles.main}>
+            <Text>演员 {utils.getActor(casts)}</Text>
+
+            <Text>剧情简介</Text>
+            <View style={[{alignItems: 'center'}]}>
+              <Text numberOfLines={summaryStyle}>{summary}</Text>
+              <TouchableOpacity onPress={this.changeSummary.bind(this)}>
+                  {IconNode}
+              </TouchableOpacity>
+            </View>
+
+            <Text>演职人员</Text>
+            {actorImgNode}
+            <Text>预告花絮</Text>
+            {videoNode}
+
+
           </View>
-
-        </View>
-      </ImageBackground>
-
-        <View style={styles.main}>
-          <Text>演员 {utils.getActor(casts)}</Text>
-          <Text>剧情简介</Text>
-          <View style={{alignItems: 'center'}}>
-            <Text>千百年来，地球上一直住着一种外星生物，名叫喵星人。它们从遥远的喵星来到地球，化身为猫科动物，分散在世界每个角落。萌萌的外表，加上机智聪明的头脑，轻易就得到人类的宠爱。不愁吃喝的它们桀骜不驯，活像饱经沧桑的江湖大佬。犀犀利就是他们中的一员，作为一名正牌的喵星来客，它肩负使命长途跋涉来到地球，却意外遇到了吴守龙（古天乐饰演）一家，上演了一幕相运相生，喵趣横生的人猫奇遇记。</Text>
-            <TouchableOpacity onPress={this.changeSummary.bind(this)}>
-              <Icon type="down" size="md" color="black" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-
+        </ScrollView>
       </View>
     )
 
