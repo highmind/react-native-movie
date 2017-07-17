@@ -5,23 +5,20 @@
  */
 
 import React, { Component } from 'react';
+
 import {
   AppRegistry,
   StyleSheet,
 } from 'react-native';
 
-import {Home, Detail} from './src/containers';
-
-import {StackNavigator} from 'react-navigation';  //路由导航
+import App from './src/containers/App'
 
 
-const App = StackNavigator({
-  Home: {screen: Home},
-  Detail: {screen: Detail},
-});
+//
+// <Provider store={store}>
+//
+// </Provider>
 
 
 
-
-
-AppRegistry.registerComponent('movie', () => App);
+AppRegistry.registerComponent('movie', () =>App);

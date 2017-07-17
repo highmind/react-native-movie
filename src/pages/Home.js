@@ -1,4 +1,7 @@
 import React,{Component} from 'react';
+import {bindActionCreators} from 'redux';
+import * as actionCreators from '../actions/actions';
+import {connect} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -39,7 +42,7 @@ const styles = StyleSheet.create({
 });
 
 
-export default class Home extends Component {
+class Home extends Component {
 
   constructor(props){
     super(props);
@@ -82,7 +85,7 @@ export default class Home extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-
+    console.log(this.props)
     return (
 
       <View style={styles.container}>
@@ -131,3 +134,15 @@ export default class Home extends Component {
     );
   }
 }
+
+function mapStateToProps(state){
+    return {
+      testTxt : state.testReducer
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return {actions:bindActionCreators(actionCreators, dispatch)};
+}
+
+export default  connect(mapStateToProps, mapDispatchToProps)(Home)
