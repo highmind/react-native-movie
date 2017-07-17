@@ -48,7 +48,10 @@ class Home extends Component {
     super(props);
     this.state = {
       text:'芝麻电影',
-      filmListData : []
+      filmListData : [],
+      start : 0,
+      count : 8,
+      page : 1
     }
   }
 
@@ -57,8 +60,10 @@ class Home extends Component {
   };
 
   componentDidMount(){
+    let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+
     Toast.loading('Loading...', 0);
-    let url = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC&start=0&count=100&client=somemessage&udid=dddddddddddddddddddddd';
+    let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
 
     fetch(url, {
        method: 'GET'
@@ -83,6 +88,37 @@ class Home extends Component {
     Toast.hide();
   }
 
+  loadMore = () => {
+    console.log('...loadMore...');
+    let {start, page, count} = this.state;
+    let tStart = (start + page * count);
+    let tPage = page++;
+
+    let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+
+
+    let url = `${api}&start=${tStart}&count=${tPage}`;
+
+    fetch(url, {
+       method: 'GET'
+    }).then((res) => {
+      return res.json(); //转换为json格式
+    }).then((resTxt) =>{
+      console.log(resTxt)
+      if (!this.ignoreLastFetch){
+        this.setState({
+          start : tStart,
+          page :tPage,
+          text : resTxt.title,
+          filmListData :resTxt.subjects
+        })
+      }
+    }).catch((error) => {
+      Toast.info('网络错误', 1);
+    }).done();
+
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     console.log(this.props)
@@ -92,8 +128,8 @@ class Home extends Component {
           <FlatList
            data={this.state.filmListData}
            keyExtractor={(item, index) => item.id}
-           onEndReached={() => {console.log('...end...')}}
-           onEndReachedThreshold={20}
+           onEndReached={this.loadMore}
+           onEndReachedThreshold={0.5}
            onRefresh={()=>{console.log('...top refresh...')}}
            refreshing={false}
            renderItem={
