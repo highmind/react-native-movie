@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
    backgroundColor:'#fff'
   },
   itemTitle:{
-    fontSize:18
+    fontSize:18,
   },
   itemWrap:{
     flexDirection: 'row',
@@ -89,6 +89,10 @@ export default class Home extends Component {
           <FlatList
            data={this.state.filmListData}
            keyExtractor={(item, index) => item.id}
+           onEndReached={() => {console.log('...end...')}}
+           onEndReachedThreshold={20}
+           onRefresh={()=>{console.log('...top refresh...')}}
+           refreshing={false}
            renderItem={
              ({item}) => {
                return (

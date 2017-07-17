@@ -138,7 +138,7 @@ class Detail extends Component{
           showsHorizontalScrollIndicator={false}>
             {nodes}
           </ScrollView>
-        </View>  
+        </View>
       )
 
     }
@@ -170,7 +170,7 @@ class Detail extends Component{
                   {nodes}
                 </ScrollView>
             </View>
-                
+
             )
 
     }
