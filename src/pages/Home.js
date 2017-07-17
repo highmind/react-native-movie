@@ -97,7 +97,7 @@ class Home extends Component {
     let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
 
 
-    let url = `${api}&start=${tStart}&count=${tPage}`;
+    let url = `${api}&start=${tStart}&count=${this.state.count}`;
 
     fetch(url, {
        method: 'GET'
@@ -110,7 +110,7 @@ class Home extends Component {
           start : tStart,
           page :tPage,
           text : resTxt.title,
-          filmListData :resTxt.subjects
+          filmListData :[...this.state.filmListData,...resTxt.subjects]
         })
       }
     }).catch((error) => {
