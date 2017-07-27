@@ -9,7 +9,8 @@ import {
   FlatList,
   Button,
   Alert,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 
 import {TabBar, Icon, Toast} from 'antd-mobile';
@@ -47,8 +48,10 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
+      loading: true,
       text:'芝麻电影',
       filmListData : [],
+      filmListTotal : 0,
       start : 0,
       count : 8,
       page : 1
@@ -60,9 +63,22 @@ class Home extends Component {
   };
 
   componentDidMount(){
+    this.getData();
+  }
+
+  getData(){
+    console.log('... getData ...');
+    this.setState({
+      loading: true,
+      text:'芝麻电影',
+      filmListData : [],
+      start : 0,
+      count : 8,
+      page : 1
+    });
     let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
 
-    Toast.loading('Loading...', 0);
+    // Toast.loading('Loading...', 0);
     let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
 
     fetch(url, {
@@ -70,11 +86,16 @@ class Home extends Component {
     }).then((res) => {
       return res.json(); //转换为json格式
     }).then((resTxt) =>{
-      Toast.hide();
+      // Toast.hide();
+      console.log(this.state.filmListData.length);
+
+      console.log(resTxt.total);
       if (!this.ignoreLastFetch){
         this.setState({
+          loading : false,
           text : resTxt.title,
-          filmListData :resTxt.subjects
+          filmListData :resTxt.subjects,
+          filmListTotal: resTxt.total
         })
       }
     }).catch((error) => {
@@ -89,33 +110,46 @@ class Home extends Component {
   }
 
   loadMore = () => {
-    console.log('...loadMore...');
-    let {start, page, count} = this.state;
-    let tStart = (start + page * count);
-    let tPage = page++;
+    let {loading, filmListData, filmListTotal} = this.state;
 
-    let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+    if(filmListData.length >= filmListTotal){
+      console.log('... 所有列表数据加载完成 ...')
+    }
+
+    if(!loading && filmListData.length < filmListTotal){ //下拉时，判断是否在请求数据，如果上次未完成，则不发起请求
+      console.log('...loadMore...');
+      this.setState({
+        loading : true
+      });
+      let {start, page, count} = this.state;
+      let tStart = (start + page * count);
+      let tPage = page++;
+
+      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
 
 
-    let url = `${api}&start=${tStart}&count=${this.state.count}`;
+      let url = `${api}&start=${tStart}&count=${this.state.count}`;
 
-    fetch(url, {
-       method: 'GET'
-    }).then((res) => {
-      return res.json(); //转换为json格式
-    }).then((resTxt) =>{
-      console.log(resTxt)
-      if (!this.ignoreLastFetch){
-        this.setState({
-          start : tStart,
-          page :tPage,
-          text : resTxt.title,
-          filmListData :[...this.state.filmListData,...resTxt.subjects]
-        })
-      }
-    }).catch((error) => {
-      Toast.info('网络错误', 1);
-    }).done();
+      fetch(url, {
+         method: 'GET'
+      }).then((res) => {
+        return res.json(); //转换为json格式
+      }).then((resTxt) =>{
+        console.log(resTxt)
+        if (!this.ignoreLastFetch){
+          this.setState({
+            loading: false,
+            start : tStart,
+            page :tPage,
+            text : resTxt.title,
+            filmListData :[...this.state.filmListData,...resTxt.subjects]
+          })
+        }
+      }).catch((error) => {
+        Toast.info('网络错误', 1);
+      }).done();
+    }
+
 
   }
 
@@ -130,12 +164,15 @@ class Home extends Component {
            keyExtractor={(item, index) => item.id}
            onEndReached={this.loadMore}
            onEndReachedThreshold={0.5}
-           onRefresh={()=>{console.log('...top refresh...')}}
-           refreshing={false}
+           onRefresh={this.getData.bind(this)}
+           refreshing={this.state.loading}
            renderItem={
              ({item}) => {
                return (
-                 <View style={styles.itemWrap}>
+                <TouchableOpacity onPress={()=> {
+                  navigate('Detail', { id: item.id, title: item.title });
+                }}>
+                  <View style={styles.itemWrap}>
 
                    <View style={styles.item1}>
                      <Image source={{uri:item.images.medium}} style={{width:65, height: 100}} />
@@ -150,16 +187,13 @@ class Home extends Component {
                    </View>
 
                    <View style={styles.item1}>
-                     <Button
-                       onPress={()=> {
-                         navigate('Detail', { id: item.id, title: item.title });
-                       }}
-                       title="查看更多"
-                       accessibilityLabel="Learn more about this purple button"
-                     />
+                     <Button onPress={()=> {
+                       navigate('Detail', { id: item.id, title: item.title });
+                     }} title="查看更多" />
                    </View>
 
                  </View>
+               </TouchableOpacity>
                )
              }
          }
