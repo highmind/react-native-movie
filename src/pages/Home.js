@@ -63,11 +63,14 @@ class Home extends Component {
   };
 
   componentDidMount(){
+
     this.getData();
   }
 
   getData(){
+
     console.log('... getData ...');
+
     this.setState({
       loading: true,
       text:'芝麻电影',
@@ -75,32 +78,34 @@ class Home extends Component {
       start : 0,
       count : 8,
       page : 1
+    }, () => {
+      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+
+      let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
+      fetch(url, {
+         method: 'GET'
+      }).then((res) => {
+        return res.json(); //转换为json格式
+      }).then((resTxt) =>{
+        // Toast.hide();
+        console.log(this.state.filmListData.length);
+
+        console.log(resTxt.total);
+        if (!this.ignoreLastFetch){
+          this.setState({
+            loading : false,
+            text : resTxt.title,
+            filmListData :resTxt.subjects,
+            filmListTotal: resTxt.total
+          })
+        }
+      }).catch((error) => {
+        Toast.info('网络错误', 1);
+      }).done();
     });
-    let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
 
     // Toast.loading('Loading...', 0);
-    let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
 
-    fetch(url, {
-       method: 'GET'
-    }).then((res) => {
-      return res.json(); //转换为json格式
-    }).then((resTxt) =>{
-      // Toast.hide();
-      console.log(this.state.filmListData.length);
-
-      console.log(resTxt.total);
-      if (!this.ignoreLastFetch){
-        this.setState({
-          loading : false,
-          text : resTxt.title,
-          filmListData :resTxt.subjects,
-          filmListTotal: resTxt.total
-        })
-      }
-    }).catch((error) => {
-      Toast.info('网络错误', 1);
-    }).done();
 
   }
 
@@ -110,6 +115,7 @@ class Home extends Component {
   }
 
   loadMore = () => {
+    console.log(this.state.filmListData)
     let {loading, filmListData, filmListTotal} = this.state;
 
     if(filmListData.length >= filmListTotal){

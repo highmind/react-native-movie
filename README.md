@@ -23,10 +23,10 @@
   <View style={styles.title}></View>
   ```
 
-  ### 界面问题
-    * 界面内容超过一屏，则使用scrollView
+### 界面问题
+  * 界面内容超过一屏，则使用scrollView
 
-  ### 组件相关
+### 组件相关
     * Text组件
       1. 可以嵌套使用，可以css继承
         ``` javascript
@@ -42,5 +42,10 @@
       2. 支持上拉加载
       3. keyExtractor属性指定使用id作为列表每一项的key
 
-  ### 性能优化
+### 性能优化
     * 使用  PureComponent
+
+### 安卓打包
+   ``` javascript
+   ./gradlew assembleRelease
+   ```

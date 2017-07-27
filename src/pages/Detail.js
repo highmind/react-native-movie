@@ -89,6 +89,7 @@ class Detail extends Component{
     .then((resTxt) => {
       Toast.hide();
       if (!this.ignoreLastFetch){
+        console.log(resTxt);
         this.setState({
           title:resTxt.title,
           data:resTxt
