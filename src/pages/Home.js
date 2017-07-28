@@ -10,6 +10,7 @@ import {
   Button,
   Alert,
   Image,
+  ActivityIndicator,
   TouchableOpacity
 } from 'react-native';
 
@@ -48,7 +49,8 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loading: true,
+      loading: true,    //底部loading
+      refreshing: false,  //顶部loading
       text:'芝麻电影',
       filmListData : [],
       filmListTotal : 0,
@@ -97,26 +99,21 @@ class Home extends Component {
   }
 
   onRefresh = () => {
-    console.log('... onRefresh ...');
+     console.log('... onRefresh ...');
       this.setState({
-        loading : true
+        refreshing: true
       });
-      console.log(this.state.count)
-      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
 
+      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
       let url = `${api}&start=0&count=${this.state.count}`;
       fetch(url, {
          method: 'GET'
       }).then((res) => {
         return res.json(); //转换为json格式
       }).then((resTxt) =>{
-        // Toast.hide();
-        console.log(this.state.filmListData.length);
-
-        console.log(resTxt.total);
         if (!this.ignoreLastFetch){
           this.setState({
-            loading : false,
+            refreshing : false,
             text : resTxt.title,
             filmListData :resTxt.subjects,
             filmListTotal: resTxt.total,
@@ -144,8 +141,8 @@ class Home extends Component {
     if(filmListData.length >= filmListTotal){
       console.log('... 所有列表数据加载完成 ...')
     }
-
-    if(!loading && filmListData.length < filmListTotal){ //下拉时，判断是否在请求数据，如果上次未完成，则不发起请求
+    console.log(loading)
+    if(!loading && filmListData.length < filmListTotal){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
       console.log('...loadMore...');
       this.setState({
         loading : true
@@ -163,7 +160,6 @@ class Home extends Component {
       }).then((res) => {
         return res.json(); //转换为json格式
       }).then((resTxt) =>{
-        console.log(resTxt)
         if (!this.ignoreLastFetch){
           this.setState({
             loading: false,
@@ -181,9 +177,31 @@ class Home extends Component {
 
   }
 
+  getListBottom = () => {
+    let {loading, filmListData, filmListTotal} = this.state;
+
+    if(loading){
+      return (
+        <ActivityIndicator style={{paddingVertical:10}}
+        size="large" animating={this.state.loading} />
+      )
+    }
+
+    if(filmListData.length >= filmListTotal){
+      return (
+        <View style={{alignItems:'center', paddingVertical:10}}>
+          <Text>
+            底线在此,不能更低了
+          </Text>
+        </View>
+      )
+    }
+
+  }
+
   render() {
     const { navigate } = this.props.navigation;
-    console.log(this.props)
+
     return (
 
       <View style={styles.container}>
@@ -193,7 +211,8 @@ class Home extends Component {
            onEndReached={this.loadMore}
            onEndReachedThreshold={0.5}
            onRefresh={this.onRefresh}
-           refreshing={this.state.loading}
+           refreshing={this.state.refreshing}
+           ListFooterComponent={this.getListBottom()}
            renderItem={
              ({item}) => {
                return (
