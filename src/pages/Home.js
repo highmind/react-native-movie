@@ -63,25 +63,48 @@ class Home extends Component {
   };
 
   componentDidMount(){
-
+    console.log('... componentDidMount ...');
     this.getData();
   }
 
   getData(){
+      console.log('... getData ...');
 
-    console.log('... getData ...');
-
-    this.setState({
-      loading: true,
-      text:'芝麻电影',
-      filmListData : [],
-      start : 0,
-      count : 8,
-      page : 1
-    }, () => {
       let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
 
       let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
+      fetch(url, {
+         method: 'GET'
+      }).then((res) => {
+        return res.json(); //转换为json格式
+      }).then((resTxt) =>{
+        // Toast.hide();
+        if (!this.ignoreLastFetch){
+          this.setState({
+            loading : false,
+            text : resTxt.title,
+            filmListData :resTxt.subjects,
+            filmListTotal: resTxt.total
+          })
+        }
+      }).catch((error) => {
+        Toast.info('网络错误', 1);
+      }).done();
+
+
+    // Toast.loading('Loading...', 0);
+
+  }
+
+  onRefresh = () => {
+    console.log('... onRefresh ...');
+      this.setState({
+        loading : true
+      });
+      console.log(this.state.count)
+      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+
+      let url = `${api}&start=0&count=${this.state.count}`;
       fetch(url, {
          method: 'GET'
       }).then((res) => {
@@ -96,20 +119,20 @@ class Home extends Component {
             loading : false,
             text : resTxt.title,
             filmListData :resTxt.subjects,
-            filmListTotal: resTxt.total
+            filmListTotal: resTxt.total,
+            start : 0,
+            count : 8,
+            page : 1
           })
         }
       }).catch((error) => {
         Toast.info('网络错误', 1);
       }).done();
-    });
-
-    // Toast.loading('Loading...', 0);
-
 
   }
 
   componentWillUnmount(){
+    console.log('... componentWillUnmount ...');
     this.ignoreLastFetch = true;
     Toast.hide();
   }
@@ -132,7 +155,6 @@ class Home extends Component {
       let tPage = page++;
 
       let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
-
 
       let url = `${api}&start=${tStart}&count=${this.state.count}`;
 
@@ -170,7 +192,7 @@ class Home extends Component {
            keyExtractor={(item, index) => item.id}
            onEndReached={this.loadMore}
            onEndReachedThreshold={0.5}
-           onRefresh={this.getData.bind(this)}
+           onRefresh={this.onRefresh}
            refreshing={this.state.loading}
            renderItem={
              ({item}) => {
