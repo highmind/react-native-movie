@@ -1,7 +1,5 @@
 import React,{Component} from 'react';
-import {bindActionCreators} from 'redux';
-import * as actionCreators from '../actions/actions';
-import {connect} from 'react-redux';
+
 import {
   StyleSheet,
   Text,
@@ -16,6 +14,8 @@ import {
 
 import {TabBar, Icon, Toast} from 'antd-mobile';
 import * as utils from '../utils';
+import {Detail} from '../pages';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 });
 
 
-class Home extends Component {
+class List extends Component {
 
   constructor(props){
     super(props);
@@ -60,19 +60,31 @@ class Home extends Component {
     }
   }
 
-  static navigationOptions = {
-    title: '芝麻电影',
-  };
+
 
   componentDidMount(){
     console.log('... componentDidMount ...');
+    
     this.getData();
+  }
+
+  getApiUrl = () => {
+      let { type } = this.props;
+      let api = '';
+      if(type == 'playing'){
+        api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+      }else{
+        api = 'http://api.douban.com/v2/movie/coming_soon?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+      }
+
+      return api;
+      
   }
 
   getData(){
       console.log('... getData ...');
-
-      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+    
+      let api = this.getApiUrl();
 
       let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
       fetch(url, {
@@ -104,7 +116,7 @@ class Home extends Component {
         refreshing: true
       });
 
-      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
+      let api = this.getApiUrl();      
       let url = `${api}&start=0&count=${this.state.count}`;
       fetch(url, {
          method: 'GET'
@@ -151,8 +163,7 @@ class Home extends Component {
       let tStart = (start + page * count);
       let tPage = page++;
 
-      let api = 'http://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
-
+      let api = this.getApiUrl();
       let url = `${api}&start=${tStart}&count=${this.state.count}`;
 
       fetch(url, {
@@ -200,15 +211,13 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.props)
     const { navigate } = this.props.navigation;
 
     return (
 
       <View style={styles.container}>
-          <Button onPress = {()=>{
-             navigate('TabTest', { title: "test" });
-
-          }} title="test" />
+          
           <FlatList
            data={this.state.filmListData}
            keyExtractor={(item, index) => item.id}
@@ -238,9 +247,7 @@ class Home extends Component {
                    </View>
 
                    <View style={styles.item1}>
-                     <Button onPress={()=> {
-                       navigate('Detail', { id: item.id, title: item.title });
-                     }} title="查看更多" />
+                     
                    </View>
 
                  </View>
@@ -256,14 +263,5 @@ class Home extends Component {
   }
 }
 
-function mapStateToProps(state){
-    return {
-      testTxt : state.testReducer
-    }
-}
 
-function mapDispatchToProps(dispatch){
-    return {actions:bindActionCreators(actionCreators, dispatch)};
-}
-
-export default  connect(mapStateToProps, mapDispatchToProps)(Home)
+export default List;

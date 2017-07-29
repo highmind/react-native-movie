@@ -2,7 +2,8 @@ import React,{Component} from 'react';
 
 import {StackNavigator} from 'react-navigation';  //路由导航
 
-import {Home, Detail} from '../pages';
+import {Home, Detail, TabTest} from '../pages';
+import {List} from '../components/';
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
 const store = configureStore();
@@ -11,6 +12,7 @@ const store = configureStore();
 const Route = StackNavigator({
   Home: {screen: Home},
   Detail: {screen: Detail},
+  TabTest:{screen:TabTest},
 });
 
 
