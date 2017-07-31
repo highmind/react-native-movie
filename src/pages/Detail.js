@@ -113,6 +113,7 @@ class Detail extends Component{
   }
 
   getActorImg(data){
+      let {navigate} = this.props.navigation;
       console.log('...getActorImg...');
       let nodes = <Text>暂无数据</Text>;
       if(data.length != 0){
@@ -125,8 +126,12 @@ class Detail extends Component{
 
           return(
               <View style={{padding:6,width:110}} key={index}>
+                <TouchableOpacity onPress={()=>{
+                    navigate('Celebrity', { title: dData.name});
+                  }}>
                   <Image source={imgData} style={{width:100, height: 139}} />
                   <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.name}</Text>
+                </TouchableOpacity>
               </View>
           )
        });
@@ -146,6 +151,7 @@ class Detail extends Component{
 
     getVideo(data){
       console.log('...getActorImg...');
+      let {navigate} = this.props.navigation;
       let nodes = <Text>暂无数据</Text>;
       if(data.length != 0){
         nodes = data.map((dData, index) => {
@@ -157,8 +163,12 @@ class Detail extends Component{
 
           return(
               <View style={{marginLeft:6,width:180}} key={index}>
+                <TouchableOpacity onPress={()=>{
+                    navigate('Video', { title: dData.title});
+                  }}>
                   <Image source={imgData} style={{width:180, height: 101}} />
                   <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.title}</Text>
+                </TouchableOpacity>
               </View>
           )
        });
