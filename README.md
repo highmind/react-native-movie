@@ -46,6 +46,7 @@
   1. 使用react-navigation
     * StackNavigator 堆栈式
     * TabNavigator tab切换式
+      1. 和StackNavigator混用问题：TabNavigator配置完成以后，直接导出，在StackNavigator的 screen中使用即可
 ### 性能优化
     * 使用  PureComponent
 
