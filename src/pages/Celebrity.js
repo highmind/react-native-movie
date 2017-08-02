@@ -5,6 +5,13 @@ import {
   View
 } from 'react-native';
 
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    backgroundColor:'#fff'
+  },
+});
+
 class Celebrity extends Component {
 
     constructor(props){
@@ -16,14 +23,16 @@ class Celebrity extends Component {
     });
 
     componentDidMount(){
-        const { params } = this.props.navigation.state;
+        const { params } = this.props.navigation.state; //从上个 screen 传过来的参数
         console.log(params);
     }
 
     render(){
+        let {params} = this.props.navigation.state;
         return (
-            <View>
-                <Text>影人</Text>
+            <View style={styles.containers}>
+                <Text>ID：{params.id}</Text>
+                <Text>影人：{params.title}</Text>
             </View>
         )
     }

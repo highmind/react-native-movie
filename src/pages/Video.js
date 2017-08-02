@@ -21,9 +21,11 @@ class Video extends Component {
     }
 
     render(){
+      let {params} = this.props.navigation.state;
         return (
             <View>
-                <Text>视频</Text>
+                <Text>ID：{params.id}</Text>
+                <Text>名称：{params.title}</Text>
             </View>
         )
     }

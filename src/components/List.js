@@ -64,7 +64,7 @@ class List extends Component {
 
   componentDidMount(){
     console.log('... componentDidMount ...');
-    
+
     this.getData();
   }
 
@@ -78,12 +78,11 @@ class List extends Component {
       }
 
       return api;
-      
   }
 
   getData(){
       console.log('... getData ...');
-    
+
       let api = this.getApiUrl();
 
       let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
@@ -116,7 +115,7 @@ class List extends Component {
         refreshing: true
       });
 
-      let api = this.getApiUrl();      
+      let api = this.getApiUrl();
       let url = `${api}&start=0&count=${this.state.count}`;
       fetch(url, {
          method: 'GET'
@@ -217,7 +216,7 @@ class List extends Component {
     return (
 
       <View style={styles.container}>
-          
+
           <FlatList
            data={this.state.filmListData}
            keyExtractor={(item, index) => item.id}
@@ -247,7 +246,7 @@ class List extends Component {
                    </View>
 
                    <View style={styles.item1}>
-                     
+
                    </View>
 
                  </View>

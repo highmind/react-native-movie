@@ -74,7 +74,7 @@ class Detail extends Component{
       isOpen : false
     }
   }
-
+  //设置 顶栏标题
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.title,
   });
@@ -120,14 +120,14 @@ class Detail extends Component{
         nodes = data.map((dData, index) => {
           let imgData = require('../assets/actor.png');
 
-          if(dData.avatars != null){ //接口数据avatars为null
+          if(dData.avatars != null){  //接口数据avatars为null
             imgData = {uri:dData.avatars.medium};
           }
 
           return(
               <View style={{padding:6,width:110}} key={index}>
                 <TouchableOpacity onPress={()=>{
-                    navigate('Celebrity', { title: dData.name});
+                    navigate('Celebrity', { id:dData.id, title: dData.name});
                   }}>
                   <Image source={imgData} style={{width:100, height: 139}} />
                   <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.name}</Text>
@@ -164,7 +164,7 @@ class Detail extends Component{
           return(
               <View style={{marginLeft:6,width:180}} key={index}>
                 <TouchableOpacity onPress={()=>{
-                    navigate('Video', { title: dData.title});
+                    navigate('Video', { id: dData.id, title: dData.title});
                   }}>
                   <Image source={imgData} style={{width:180, height: 101}} />
                   <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.title}</Text>

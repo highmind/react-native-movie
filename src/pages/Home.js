@@ -206,7 +206,7 @@ class Home extends Component {
 
       <View style={styles.container}>
           <Button onPress = {()=>{
-             navigate('TabTest', { title: "test" });
+             navigate('FilmList', { title: "test" });
 
           }} title="test" />
           <FlatList

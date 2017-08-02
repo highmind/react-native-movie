@@ -42,6 +42,10 @@
       2. 支持上拉加载
       3. keyExtractor属性指定使用id作为列表每一项的key
 
+### 路由和界面切换
+  1. 使用react-navigation
+    * StackNavigator 堆栈式
+    * TabNavigator tab切换式
 ### 性能优化
     * 使用  PureComponent
 
