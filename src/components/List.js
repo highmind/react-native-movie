@@ -14,6 +14,7 @@ import {
 
 import {TabBar, Icon, Toast} from 'antd-mobile';
 import * as utils from '../utils';
+import { layoutStyles } from '../pages/layout';
 import {Detail} from '../pages';
 
 
@@ -32,15 +33,7 @@ const styles = StyleSheet.create({
     paddingBottom:10,
     paddingLeft:10,
     paddingRight:10
-  },
-
-  item3: {
-   flex:3
- },
-
- item1:{
-   flex:1
- }
+  }
 });
 
 
@@ -227,26 +220,34 @@ class List extends Component {
            ListFooterComponent={this.getListBottom()}
            renderItem={
              ({item}) => {
+               let director = '';
+               if(item.directors.length > 0){  //当导演数据为空的时候，进行数据处理
+                 director = item.directors[0].name;
+               }else{
+                  director = '未知';
+               }
                return (
                 <TouchableOpacity onPress={()=> {
                   navigate('Detail', { id: item.id, title: item.title });
                 }}>
                   <View style={styles.itemWrap}>
 
-                   <View style={styles.item1}>
-                     <Image source={{uri:item.images.medium}} style={{width:65, height: 100}} />
+                   <View style={layoutStyles.flex2}>
+                     <Image source={{uri:item.images.medium}} style={{width:78, height: 120}} />
                    </View>
 
-                   <View style={styles.item3}>
+                   <View style={layoutStyles.flex5}>
                       <Text style={styles.itemTitle}>{item.title}</Text>
                       <Text>{item.genres.join('/')}</Text>
-                      <Text>导演:{item.directors[0].name}</Text>
+                      <Text>导演:{director}</Text>
                       <Text>{utils.getActor(item.casts)}</Text>
                       <Text>{item.pubdates[item.pubdates.length - 1]}</Text>
                    </View>
 
-                   <View style={styles.item1}>
-
+                   <View style={layoutStyles.flex1}>
+                     <Button onPress={()=> {
+                       navigate('Detail', { id: item.id, title: item.title });
+                     }} title="更多" color="#EF4238" />
                    </View>
 
                  </View>

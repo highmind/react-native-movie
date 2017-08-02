@@ -23,6 +23,18 @@ const layoutStyles = StyleSheet.create({
  flex3: {
     flex:3
   },
+ flex4:{
+   flex:4
+ },
+
+ flex5:{
+   flex:5
+ },
+
+ flex6:{
+   flex:6
+ }
+
 
 });
 
