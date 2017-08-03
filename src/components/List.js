@@ -12,7 +12,7 @@ import {
 
 import {Toast} from 'antd-mobile';
 import * as utils from '../utils';
-import { layoutStyles } from '../pages/layout';
+import { layoutStyles } from '../styles/layout';
 import {Detail} from '../pages';
 
 const styles = StyleSheet.create({

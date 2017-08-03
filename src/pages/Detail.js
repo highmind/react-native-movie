@@ -4,24 +4,20 @@ import {
   Text,
   View,
   Image,
+  Button,
   ImageBackground,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
 
 import { Toast, Icon } from 'antd-mobile';
-import { layoutStyles } from './layout';
+import { layoutStyles } from '../styles/layout';
+import { CommentList } from '../components';
 import * as utils from '../utils';
 const styles = StyleSheet.create({
   container:{
     flex:1,
     backgroundColor:'#fff'
-  },
-  test:{
-    width:100,
-    height:100,
-    marginLeft:10,
-    backgroundColor:'blue'
   },
   head:{
     padding:20,
@@ -43,7 +39,6 @@ const styles = StyleSheet.create({
     paddingLeft:16,
     paddingBottom:10,
     paddingRight:16,
-
   },
   btn : {
     borderRadius:4,
@@ -52,9 +47,6 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'orange',
     borderStyle:'solid',
-  },
-   horizontalScrollView: {
-    height: 200,
   },
   btnText : {
     fontSize:16,
@@ -140,7 +132,6 @@ class Detail extends Component{
       return(
         <View>
           <ScrollView horizontal={true}
-           style={styles.horizontalScrollView}
           showsHorizontalScrollIndicator={false}>
             {nodes}
           </ScrollView>
@@ -176,7 +167,6 @@ class Detail extends Component{
       return(
             <View>
               <ScrollView horizontal={true}
-                style={styles.horizontalScrollView}
                 showsHorizontalScrollIndicator={false}>
                   {nodes}
                 </ScrollView>
@@ -188,10 +178,12 @@ class Detail extends Component{
 
 
   render(){
+    let {navigate} = this.props.navigation;
     let summaryStyle = this.state.isOpen ? 8 : 4;
     let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
     <Icon type="down" size="md" color="black" />;
     let {
+      id,
       images = [],
       title,
       alt,
@@ -203,6 +195,7 @@ class Detail extends Component{
       countries=[],
       summary,
       popular_reviews=[],
+      popular_comments=[],
       genres = [],
       casts = [],
       directors = [],
@@ -251,9 +244,15 @@ class Detail extends Component{
 
             <Text style={[layoutStyles.txtBold,layoutStyles.title]}>演职人员</Text>
             {actorImgNode}
+
             <Text style={[layoutStyles.txtBold,layoutStyles.title]}>预告花絮</Text>
             {videoNode}
 
+            <Text style={[layoutStyles.txtBold, layoutStyles.title]}>短评</Text>
+            <CommentList data={popular_comments} />
+            <Button onPress={()=>{
+                navigate('Review', { id: id, title: title });
+              }} title="更多短评" color="#EF4238" />
           </View>
         </ScrollView>
       </View>

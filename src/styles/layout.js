@@ -48,11 +48,10 @@ const layoutStyles = StyleSheet.create({
    fontSize:16,
    color:'#000'
  },
- 
+
  paragraph:{
    paddingVertical:10
- }
-
+ },
 
 });
 

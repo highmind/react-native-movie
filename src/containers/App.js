@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {StackNavigator} from 'react-navigation';  //路由导航
-import {Detail, Celebrity, Video, FilmList} from '../pages';
+import {Detail, Celebrity, Video, FilmList, Review} from '../pages';
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
 const store = configureStore();
@@ -10,7 +10,8 @@ const Route = StackNavigator({
   Home: {screen: FilmList},
   Detail: {screen: Detail},
   Celebrity:{screen:Celebrity},
-  Video:{screen:Video}
+  Video:{screen:Video},
+  Review:{screen:Review}
 });
 
 //设置首屏的 顶栏title
