@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 
 class Video extends Component {
-
     constructor(props){
         super(props);
     }
@@ -31,4 +30,4 @@ class Video extends Component {
     }
 }
 
-export default Video
+export default Video;

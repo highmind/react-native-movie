@@ -1,22 +1,19 @@
 import React,{Component} from 'react';
-
 import {
   StyleSheet,
   Text,
   View,
   FlatList,
   Button,
-  Alert,
   Image,
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
 
-import {TabBar, Icon, Toast} from 'antd-mobile';
+import {Toast} from 'antd-mobile';
 import * as utils from '../utils';
 import { layoutStyles } from '../pages/layout';
 import {Detail} from '../pages';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +54,6 @@ class List extends Component {
 
   componentDidMount(){
     console.log('... componentDidMount ...');
-
     this.getData();
   }
 
@@ -74,17 +70,11 @@ class List extends Component {
   }
 
   getData(){
-      console.log('... getData ...');
-
       let api = this.getApiUrl();
-
       let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
-      fetch(url, {
-         method: 'GET'
-      }).then((res) => {
-        return res.json(); //转换为json格式
-      }).then((resTxt) =>{
-        // Toast.hide();
+      fetch(url, {method: 'GET'})
+      .then((res) => { return res.json();})
+      .then((resTxt) =>{
         if (!this.ignoreLastFetch){
           this.setState({
             loading : false,
@@ -96,7 +86,6 @@ class List extends Component {
       }).catch((error) => {
         Toast.info('网络错误', 1);
       }).done();
-
 
     // Toast.loading('Loading...', 0);
 
@@ -139,15 +128,8 @@ class List extends Component {
   }
 
   loadMore = () => {
-    console.log(this.state.filmListData)
     let {loading, filmListData, filmListTotal} = this.state;
-
-    if(filmListData.length >= filmListTotal){
-      console.log('... 所有列表数据加载完成 ...')
-    }
-    console.log(loading)
     if(!loading && filmListData.length < filmListTotal){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
-      console.log('...loadMore...');
       this.setState({
         loading : true
       });
@@ -158,11 +140,9 @@ class List extends Component {
       let api = this.getApiUrl();
       let url = `${api}&start=${tStart}&count=${this.state.count}`;
 
-      fetch(url, {
-         method: 'GET'
-      }).then((res) => {
-        return res.json(); //转换为json格式
-      }).then((resTxt) =>{
+      fetch(url, {method: 'GET'})
+      .then((res) => {return res.json();})
+      .then((resTxt) =>{
         if (!this.ignoreLastFetch){
           this.setState({
             loading: false,
@@ -199,17 +179,12 @@ class List extends Component {
         </View>
       )
     }
-
   }
 
   render() {
-    console.log(this.props)
     const { navigate } = this.props.navigation;
-
     return (
-
       <View style={styles.container}>
-
           <FlatList
            data={this.state.filmListData}
            keyExtractor={(item, index) => item.id}

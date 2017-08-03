@@ -38,4 +38,4 @@ class Celebrity extends Component {
     }
 }
 
-export default Celebrity
+export default Celebrity;

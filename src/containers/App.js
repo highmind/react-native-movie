@@ -1,9 +1,6 @@
 import React,{Component} from 'react';
-
 import {StackNavigator} from 'react-navigation';  //路由导航
-
 import {Detail, Celebrity, Video, FilmList} from '../pages';
-import {List} from '../components/';
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
 const store = configureStore();
@@ -16,7 +13,7 @@ const Route = StackNavigator({
   Video:{screen:Video}
 });
 
-//设置Home的 顶栏title
+//设置首屏的 顶栏title
 FilmList.navigationOptions = {
   title: '芝麻电影',
 };

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { TabNavigator} from 'react-navigation';
+import {TabNavigator} from 'react-navigation';
 import {List} from '../components/';
 
 //正在上映组件，由List组件和react-navigation的props构成
@@ -12,7 +12,6 @@ class PlayingList extends Component {
       <List type="playing" {...this.props} />
     )
   }
-
  }
 
 //即将上映组件，由List组件和react-navigation的props构成

@@ -254,7 +254,6 @@ class Detail extends Component{
             <Text>预告花絮</Text>
             {videoNode}
 
-
           </View>
         </ScrollView>
       </View>
