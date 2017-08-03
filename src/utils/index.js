@@ -3,7 +3,7 @@ export let getActor = (data) => {
    let tmpStr = '';
    data.map(function(dData, index){
      if(index == 0){
-       tmpStr += ' ' + dData.name;
+       tmpStr += dData.name;
      }
      else{
        tmpStr += ' / ' + dData.name;

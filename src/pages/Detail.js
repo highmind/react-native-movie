@@ -130,7 +130,7 @@ class Detail extends Component{
                     navigate('Celebrity', { id:dData.id, title: dData.name});
                   }}>
                   <Image source={imgData} style={{width:100, height: 139}} />
-                  <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.name}</Text>
+                  <Text numberOfLines={1} style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>{dData.name}</Text>
                 </TouchableOpacity>
               </View>
           )
@@ -167,7 +167,7 @@ class Detail extends Component{
                     navigate('Video', { id: dData.id, title: dData.title});
                   }}>
                   <Image source={imgData} style={{width:180, height: 101}} />
-                  <Text numberOfLines={1} style={{textAlign:'center'}}>{dData.title}</Text>
+                  <Text numberOfLines={1} style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>{dData.title}</Text>
                 </TouchableOpacity>
               </View>
           )
@@ -225,7 +225,7 @@ class Detail extends Component{
             </View>
 
             <View style={layoutStyles.flex2}>
-              <Text style={styles.whiteTxt}>
+              <Text style={[styles.whiteTxt,{lineHeight:24}]}>
                 <Text style={styles.movieName}>{title}{'\n'}</Text>
                 <Text>{aka[0]}{'\n'}</Text>
                 <Text style={styles.score}>{rating.average==0?'暂无评分':`${rating.average}分`}{'\n'}</Text>
@@ -241,17 +241,17 @@ class Detail extends Component{
           <View style={styles.main}>
             <Text>演员 {utils.getActor(casts)}</Text>
 
-            <Text>剧情简介</Text>
+            <Text style={[layoutStyles.txtBold,layoutStyles.title]}>剧情简介</Text>
             <View style={[{alignItems: 'center'}]}>
-              <Text numberOfLines={summaryStyle}>{summary}</Text>
+              <Text style={{lineHeight:24}} numberOfLines={summaryStyle}>{summary}</Text>
               <TouchableOpacity onPress={this.changeSummary.bind(this)}>
                   {IconNode}
               </TouchableOpacity>
             </View>
 
-            <Text>演职人员</Text>
+            <Text style={[layoutStyles.txtBold,layoutStyles.title]}>演职人员</Text>
             {actorImgNode}
-            <Text>预告花絮</Text>
+            <Text style={[layoutStyles.txtBold,layoutStyles.title]}>预告花絮</Text>
             {videoNode}
 
           </View>

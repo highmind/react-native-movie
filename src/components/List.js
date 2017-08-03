@@ -166,14 +166,14 @@ class List extends Component {
     if(loading){
       return (
         <ActivityIndicator style={{paddingVertical:10}}
-        size="large" animating={this.state.loading} />
+        size="large" color="#e54847" animating={this.state.loading} />
       )
     }
 
     if(filmListData.length >= filmListTotal){
       return (
-        <View style={{alignItems:'center', paddingVertical:10}}>
-          <Text>
+        <View style={{alignItems:'center', paddingVertical:20}}>
+          <Text style={{fontSize:12,color:'#999999'}}>
             底线在此,不能更低了
           </Text>
         </View>
@@ -208,7 +208,7 @@ class List extends Component {
                   <View style={styles.itemWrap}>
 
                    <View style={layoutStyles.flex2}>
-                     <Image source={{uri:item.images.medium}} style={{width:78, height: 120}} />
+                     <Image source={{uri:item.images.medium}} style={{width:87, height: 120}} />
                    </View>
 
                    <View style={layoutStyles.flex5}>

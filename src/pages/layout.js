@@ -33,6 +33,24 @@ const layoutStyles = StyleSheet.create({
 
  flex6:{
    flex:6
+ },
+
+ txtBold:{
+   fontWeight:'bold'
+ },
+
+ txtCenter:{
+   textAlign:'center'
+ },
+
+ title:{
+   paddingVertical:10,
+   fontSize:16,
+   color:'#000'
+ },
+ 
+ paragraph:{
+   paddingVertical:10
  }
 
 
