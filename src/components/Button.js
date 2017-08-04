@@ -3,36 +3,27 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  Alert
 } from 'react-native';
 
 const styles = StyleSheet.create({
   btn : {
-    borderRadius:4,
-    width:80,
-    height:30,
-    borderWidth:1,
-    borderColor:'orange',
-    borderStyle:'solid',
+    borderRadius:3,
+    alignItems:'center',
+    paddingVertical:6
   },
   btnText : {
-    fontSize:16,
-    width:80,
-    height:30,
-    textAlign:'center',
-    lineHeight:30,
+    color:'#fff'
   }
 });
 
 class Button extends Component{
+
   render(){
+    let {color, title, style} = this.props;
     return (
-        <TouchableHighlight style={styles.btn}
-          onPress={()=> {
-            Alert.alert(`你点击了按钮`,)
-            }
-        }>
-          <Text style={styles.btnText}>Button</Text>
+        <TouchableHighlight style={[styles.btn,{backgroundColor:color},style]}
+          onPress={this.props.onPress}>
+          <Text style={styles.btnText}>{title}</Text>
         </TouchableHighlight>
     )
 

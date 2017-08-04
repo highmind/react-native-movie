@@ -43,6 +43,10 @@ const layoutStyles = StyleSheet.create({
    textAlign:'center'
  },
 
+ txtRight:{
+   textAlign:'right'
+ },
+
  title:{
    paddingVertical:10,
    fontSize:16,

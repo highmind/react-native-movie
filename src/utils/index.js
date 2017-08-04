@@ -15,3 +15,7 @@ export let getActor = (data) => {
 export let getGenres = (data) => {
   return data.join('/');
 }
+
+export let getScore = (data) => {
+  return data==0 ? '暂无评分' : `${data}分`;
+}

@@ -202,7 +202,7 @@ class Detail extends Component{
       durations=[],
       pubdate,
       wish_count,
-      rating={average:'暂无'},
+      rating={average:0},
       countries=[],
       summary,
       popular_reviews=[],
@@ -228,11 +228,11 @@ class Detail extends Component{
                 <Image resizeMode="contain" source={{uri:images.large}} style={{width:100, height: 139}} />
             </View>
 
-            <View style={layoutStyles.flex2}>
+            <View style={[layoutStyles.flex3,{paddingHorizontal:50}]}>
               <Text style={[styles.whiteTxt,{lineHeight:24}]}>
                 <Text style={styles.movieName}>{title}{'\n'}</Text>
                 <Text>{aka[0]}{'\n'}</Text>
-                <Text style={styles.score}>{rating.average==0?'暂无评分':`${rating.average}分`}{'\n'}</Text>
+                <Text style={styles.score}>{utils.getScore(rating.average)}{'\n'}</Text>
                 <Text>{utils.getGenres(genres)}{'\n'}</Text>
                 <Text>{countries[0]} {durations[durations.length-1]}{'\n'}</Text>
                 <Text>{pubdate} 大陆上映 </Text>

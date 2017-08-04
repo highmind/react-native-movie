@@ -4,7 +4,6 @@ import {
   Text,
   View,
   FlatList,
-  Button,
   Image,
   ActivityIndicator,
   TouchableOpacity,
@@ -13,7 +12,7 @@ import {
 import {Toast} from 'antd-mobile';
 import * as utils from '../utils';
 import { layoutStyles } from '../styles/layout';
-// import {Detail} from '../pages';
+import { Button } from './';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +29,12 @@ const styles = StyleSheet.create({
     paddingBottom:10,
     paddingLeft:10,
     paddingRight:10
-  }
+  },
+  score:{
+    color: '#ffc600',
+    fontWeight: 'bold',
+    fontSize:15
+  },
 });
 
 
@@ -212,7 +216,7 @@ class List extends Component {
                        resizeMode="contain" />
                    </View>
 
-                   <View style={[layoutStyles.flex4,{paddingHorizontal:16}]}>
+                   <View style={[layoutStyles.flex4,{paddingHorizontal:6}]}>
                       <Text style={styles.itemTitle}>{item.title}</Text>
                       <Text>{item.genres.join('/')}</Text>
                       <Text>导演:{director}</Text>
@@ -220,10 +224,17 @@ class List extends Component {
                       <Text>{item.pubdates[item.pubdates.length - 1]}</Text>
                    </View>
 
-                   <View style={layoutStyles.flex1}>
-                     <Button onPress={()=> {
+                   <View style={[layoutStyles.flex2, layoutStyles.flexColumn, {alignItems:'flex-end'}]}>
+                     <View>
+                       <Text style={[styles.score,layoutStyles.txtRight]}>{utils.getScore(item.rating.average)}</Text>
+                     </View>
+                     <View style={{marginTop:30}}>
+                       <Button style={{width:60}} onPress={()=> {
                        navigate('Detail', { id: item.id, title: item.title });
                      }} title="更多" color="#EF4238" />
+                    </View>
+
+
                    </View>
 
                  </View>
