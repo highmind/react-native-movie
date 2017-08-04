@@ -54,3 +54,8 @@
    ``` javascript
    ./gradlew assembleRelease
    ```
+### 实现功能
+  1. 即将上映
+  2. 正在热映
+  3. 电影详情
+  4. 短评

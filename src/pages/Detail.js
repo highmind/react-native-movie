@@ -121,7 +121,7 @@ class Detail extends Component{
                 <TouchableOpacity onPress={()=>{
                     navigate('Celebrity', { id:dData.id, title: dData.name});
                   }}>
-                  <Image source={imgData} style={{width:100, height: 139}} />
+                  <Image resizeMode="contain" source={imgData} style={{width:100, height: 139}} />
                   <Text numberOfLines={1} style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>{dData.name}</Text>
                 </TouchableOpacity>
               </View>
@@ -157,7 +157,7 @@ class Detail extends Component{
                 <TouchableOpacity onPress={()=>{
                     navigate('Video', { id: dData.id, title: dData.title});
                   }}>
-                  <Image source={imgData} style={{width:180, height: 101}} />
+                  <Image resizeMode="contain" source={imgData} style={{width:180, height: 101}} />
                   <Text numberOfLines={1} style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>{dData.title}</Text>
                 </TouchableOpacity>
               </View>
@@ -176,9 +176,20 @@ class Detail extends Component{
 
     }
 
+  getBottom(){  //没有短评时，不显示查看更多按钮
+    let {navigate} = this.props.navigation;
+    let {popular_comments=[], id, title} = this.state.data;
+    if(popular_comments.length != 0){
+      return (
+        <Button onPress={()=>{
+            navigate('Review', { id: id, title: title });
+          }} title="查看更多短评" color="#EF4238" />
+      )
+    }
+  }
 
   render(){
-    let {navigate} = this.props.navigation;
+
     let summaryStyle = this.state.isOpen ? 8 : 4;
     let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
     <Icon type="down" size="md" color="black" />;
@@ -214,7 +225,7 @@ class Detail extends Component{
           <View style={[layoutStyles.flexRow, styles.head]}>
 
             <View style={layoutStyles.flex1}>
-                <Image source={{uri:images.large}} style={{width:100, height: 139}} />
+                <Image resizeMode="contain" source={{uri:images.large}} style={{width:100, height: 139}} />
             </View>
 
             <View style={layoutStyles.flex2}>
@@ -250,9 +261,7 @@ class Detail extends Component{
 
             <Text style={[layoutStyles.txtBold, layoutStyles.title]}>短评</Text>
             <CommentList data={popular_comments} />
-            <Button onPress={()=>{
-                navigate('Review', { id: id, title: title });
-              }} title="查看更多短评" color="#EF4238" />
+            {this.getBottom()}
           </View>
         </ScrollView>
       </View>

@@ -35,6 +35,7 @@ class Review extends Component {
       CommentListTotal : 0,
       start : 0,
       count : 8,
+      ended : false  //数据是否到底
     }
   }
 
@@ -95,6 +96,7 @@ class Review extends Component {
             CommentListTotal: resTxt.total,
             start : resTxt.next_start,
             count : 8,
+            ended : true
           })
         }
       }).catch((error) => {
@@ -110,9 +112,9 @@ class Review extends Component {
   }
 
   loadMore = () => {
-    let {loading, CommentListData, CommentListTotal} = this.state;
-    if(!loading && CommentListData.length < CommentListTotal){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
-
+    let {loading, ended, CommentListData, CommentListTotal} = this.state;
+    if(!loading && !ended){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
+      console.log('...loadMore');
       this.setState({
         loading : true
       });
@@ -125,12 +127,16 @@ class Review extends Component {
       .then((res) => {return res.json();})
       .then((resTxt) =>{
         console.log(resTxt)
-        console.log([...this.state.CommentListData,...resTxt.comments])
-        if (!this.ignoreLastFetch){
+        if(resTxt.comments.length != 0){ //如果返回数组不为空
           this.setState({
             loading: false,
             start : resTxt.next_start,
             CommentListData :[...this.state.CommentListData,...resTxt.comments]
+          })
+        }else{
+          this.setState({
+            loading : false,
+            ended : true
           })
         }
       }).catch((error) => {
@@ -142,8 +148,8 @@ class Review extends Component {
   }
 
   getListBottom = () => {  //设置底部内容，数据没有结束时，使用loading，结束则使用提示语
-    let {loading, CommentListData, CommentListTotal} = this.state;
-
+    let {loading, ended, CommentListData, CommentListTotal} = this.state;
+    console.log(CommentListData.length)
     if(loading){
       return (
         <ActivityIndicator style={{paddingVertical:10}}
@@ -151,7 +157,7 @@ class Review extends Component {
       )
     }
 
-    if(CommentListData.length >= CommentListTotal){
+    if(ended){
       return (
         <View style={{alignItems:'center', paddingVertical:20}}>
           <Text style={{fontSize:12,color:'#999999'}}>

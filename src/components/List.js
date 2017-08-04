@@ -208,10 +208,11 @@ class List extends Component {
                   <View style={styles.itemWrap}>
 
                    <View style={layoutStyles.flex2}>
-                     <Image source={{uri:item.images.medium}} style={{width:87, height: 120}} />
+                     <Image source={{uri:item.images.medium}} style={{width:87, height: 120}}
+                       resizeMode="contain" />
                    </View>
 
-                   <View style={layoutStyles.flex5}>
+                   <View style={[layoutStyles.flex4,{paddingHorizontal:16}]}>
                       <Text style={styles.itemTitle}>{item.title}</Text>
                       <Text>{item.genres.join('/')}</Text>
                       <Text>导演:{director}</Text>
