@@ -5,7 +5,7 @@ import {List} from '../components/';
 //正在上映组件，由List组件和react-navigation的props构成
 class PlayingList extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "即将上映",
+    title: "正在上映",
   });
   render(){
     return (
@@ -17,7 +17,7 @@ class PlayingList extends Component {
 //即将上映组件，由List组件和react-navigation的props构成
  class ComingList extends Component {
    static navigationOptions = ({ navigation }) => ({
-     title: "正在上映",
+     title: "即将上映",
    });
   render(){
     return (

@@ -252,7 +252,7 @@ class Detail extends Component{
             <CommentList data={popular_comments} />
             <Button onPress={()=>{
                 navigate('Review', { id: id, title: title });
-              }} title="更多短评" color="#EF4238" />
+              }} title="查看更多短评" color="#EF4238" />
           </View>
         </ScrollView>
       </View>

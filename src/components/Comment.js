@@ -30,7 +30,6 @@ class Comment extends Component{
       content,
       created_at
     } = this.props.data;
-    console.log(created_at)
     return(
       <View style={styles.comment}>
         <View style={[styles.commentHead, layoutStyles.flexRow]}>
