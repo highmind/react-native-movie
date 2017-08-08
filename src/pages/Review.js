@@ -17,10 +17,8 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff'
   },
   main:{
-    paddingTop:10,
-    paddingLeft:16,
-    paddingBottom:10,
-    paddingRight:16,
+    paddingVertical:10,
+    paddingHorizontal:16,
   },
 });
 
@@ -32,7 +30,6 @@ class Review extends Component {
       loading: true,    //底部loading
       refreshing: false,  //顶部loading
       CommentListData : [],
-      CommentListTotal : 0,
       start : 0,
       count : 8,
       ended : false  //数据是否到底
@@ -56,7 +53,7 @@ class Review extends Component {
 
   getData(){
       let api = this.getApiUrl();
-      console.log(api)
+      console.log(api);
       let url = `${api}&start=${this.state.start}&count=${this.state.count}`;
       fetch(url, {method: 'GET'})
       .then((res) => { return res.json();})
@@ -66,7 +63,6 @@ class Review extends Component {
           this.setState({
             loading : false,
             CommentListData :resTxt.comments,
-            CommentListTotal: resTxt.total,
             start : resTxt.next_start  //需要注意，短评接口会默认返回下次 开始位置，直接使用即可
           })
         }
@@ -93,7 +89,6 @@ class Review extends Component {
           this.setState({
             refreshing : false,
             CommentListData :resTxt.comments,
-            CommentListTotal: resTxt.total,
             start : resTxt.next_start,
             count : 8,
             ended : true
@@ -112,7 +107,7 @@ class Review extends Component {
   }
 
   loadMore = () => {
-    let {loading, ended, CommentListData, CommentListTotal} = this.state;
+    let {loading, ended, CommentListData} = this.state;
     if(!loading && !ended){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
       console.log('...loadMore');
       this.setState({
@@ -148,8 +143,7 @@ class Review extends Component {
   }
 
   getListBottom = () => {  //设置底部内容，数据没有结束时，使用loading，结束则使用提示语
-    let {loading, ended, CommentListData, CommentListTotal} = this.state;
-    console.log(CommentListData.length)
+    let {loading, ended} = this.state;
     if(loading){
       return (
         <ActivityIndicator style={{paddingVertical:10}}
