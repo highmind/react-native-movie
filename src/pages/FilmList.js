@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
+import {View, TouchableHighlight} from 'react-native';
+import {Icon} from 'antd-mobile';
 import {TabNavigator} from 'react-navigation';
 import {List} from '../components/';
 
 //正在上映组件，由List组件和react-navigation的props构成
 class PlayingList extends Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "正在上映",
+    tabBarLabel: "正在上映",  //tabBarLabel tab的文字
   });
   render(){
     return (
@@ -17,7 +19,7 @@ class PlayingList extends Component {
 //即将上映组件，由List组件和react-navigation的props构成
  class ComingList extends Component {
    static navigationOptions = ({ navigation }) => ({
-     title: "即将上映",
+     tabBarLabel: "即将上映",
    });
   render(){
     return (
@@ -31,7 +33,18 @@ class PlayingList extends Component {
 const FilmList = TabNavigator({
     Playing: { screen: PlayingList },
     Coming: { screen: ComingList },
-  }, {
+  },{
+      navigationOptions:({ navigation }) => ({
+          title: '芝麻电影',
+          headerRight:
+          <TouchableHighlight style={{marginRight:10}} onPress={()=>{
+                navigation.navigate('Search', { id:123, title: '搜索'});
+            }}>
+            <View>
+                <Icon type={'\ue670'} size="md" color="#fff" />
+            </View>
+          </TouchableHighlight>,
+      }),
       animationEnabled: false, // 切换页面时是否有动画效果
       tabBarPosition: 'top', // 显示在底端，android 默认是显示在页面顶端的
       swipeEnabled: true, // 是否可以左右滑动切换tab
@@ -53,5 +66,17 @@ const FilmList = TabNavigator({
           },
       },
 });
+
+
+//设置首屏的 顶栏title,因为首屏使用了TabNavigator
+// FilmList.navigationOptions = ({ navigation }) => ({
+//     title: '芝麻电影',
+//     headerRight:
+//     <TouchableHighlight style={{marginRight:10}} onPress={()=>{console.log(navigation.state )}}>
+//       <View>
+//           <Icon type={'\ue670'} size="md" color="#fff" />
+//       </View>
+//     </TouchableHighlight>,
+// });
 
 export default FilmList;

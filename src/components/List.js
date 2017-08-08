@@ -45,7 +45,6 @@ class List extends Component {
     this.state = {
       loading: true,    //底部loading
       refreshing: false,  //顶部loading
-      text:'芝麻电影',
       filmListData : [],
       filmListTotal : 0,
       start : 0,
@@ -53,8 +52,6 @@ class List extends Component {
       page : 1
     }
   }
-
-
 
   componentDidMount(){
     console.log('... componentDidMount ...');
@@ -82,7 +79,6 @@ class List extends Component {
         if (!this.ignoreLastFetch){
           this.setState({
             loading : false,
-            text : resTxt.title,
             filmListData :resTxt.subjects,
             filmListTotal: resTxt.total
           })
@@ -90,9 +86,6 @@ class List extends Component {
       }).catch((error) => {
         Toast.info('网络错误', 1);
       }).done();
-
-    // Toast.loading('Loading...', 0);
-
   }
 
   onRefresh = () => {
@@ -111,7 +104,6 @@ class List extends Component {
         if (!this.ignoreLastFetch){
           this.setState({
             refreshing : false,
-            text : resTxt.title,
             filmListData :resTxt.subjects,
             filmListTotal: resTxt.total,
             start : 0,
@@ -152,7 +144,6 @@ class List extends Component {
             loading: false,
             start : tStart,
             page :tPage,
-            text : resTxt.title,
             filmListData :[...this.state.filmListData,...resTxt.subjects]
           })
         }

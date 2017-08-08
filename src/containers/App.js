@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
+
 import {StackNavigator} from 'react-navigation';  //路由导航
-import {Detail, Celebrity, Video, FilmList, Review} from '../pages';
+import {Detail, Celebrity, Video, FilmList, Review, Search} from '../pages';
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
 const store = configureStore();
@@ -11,15 +12,23 @@ const Route = StackNavigator({
   Detail: {screen: Detail},
   Celebrity:{screen:Celebrity},
   Video:{screen:Video},
-  Review:{screen:Review}
+  Review:{screen:Review},
+  Search:{screen:Search}
+},{
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor:'#d43d3d'
+      },
+      headerTitleStyle: {
+        color:'#fff'
+      },
+      headerTintColor: '#fff',
+    }
 });
 
-//设置首屏的 顶栏title
-FilmList.navigationOptions = {
-  title: '芝麻电影',
-};
 
 class App extends Component {
+
   render(){
     return (
       <Provider store={store}>
