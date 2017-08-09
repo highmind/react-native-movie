@@ -60,6 +60,14 @@ class Search extends Component {
         let api = this.getApiUrl();
         let url = `${api}&q=${this.state.searchTxt}&start=0&count=${this.state.count}`;
         console.log(url);
+
+        let {searchTxt} = this.state;
+        if(utils.trim(searchTxt) == ''){
+          console.log('请输入关键词')
+          Toast.info('请输入搜索词', 1);
+          return;
+        }
+
         this.setState({
           loading : true,
           filmListData :[],

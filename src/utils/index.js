@@ -29,3 +29,7 @@ export let getDirector = (data) => {
   }
   return director;
 }
+
+export let trim = (data) => {
+  return data.replace(/^\s+|\s+$/gm,'');
+}
