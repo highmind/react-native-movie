@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
 });
 
 class Button extends Component{
-
   render(){
     let {color, title, style} = this.props;
     return (
@@ -26,7 +25,6 @@ class Button extends Component{
           <Text style={styles.btnText}>{title}</Text>
         </TouchableHighlight>
     )
-
   }
 }
 

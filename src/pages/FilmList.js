@@ -67,16 +67,4 @@ const FilmList = TabNavigator({
       },
 });
 
-
-//设置首屏的 顶栏title,因为首屏使用了TabNavigator
-// FilmList.navigationOptions = ({ navigation }) => ({
-//     title: '芝麻电影',
-//     headerRight:
-//     <TouchableHighlight style={{marginRight:10}} onPress={()=>{console.log(navigation.state )}}>
-//       <View>
-//           <Icon type={'\ue670'} size="md" color="#fff" />
-//       </View>
-//     </TouchableHighlight>,
-// });
-
 export default FilmList;

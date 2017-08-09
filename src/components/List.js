@@ -9,31 +9,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {Toast} from 'antd-mobile';
-import * as utils from '../utils';
+import { Toast } from 'antd-mobile';
 import { layoutStyles } from '../styles/layout';
-import { Button } from './';
+import { ListItem } from './';
 
 const styles = StyleSheet.create({
   container: {
    flex: 1,
    paddingTop: 10,
    backgroundColor:'#fff'
-  },
-  itemTitle:{
-    fontSize:18,
-  },
-  itemWrap:{
-    flexDirection: 'row',
-    paddingTop:10,
-    paddingBottom:10,
-    paddingLeft:10,
-    paddingRight:10
-  },
-  score:{
-    color: '#ffc600',
-    fontWeight: 'bold',
-    fontSize:15
   },
 });
 
@@ -177,7 +161,7 @@ class List extends Component {
   }
 
   render() {
-    const { navigate } = this.props.navigation;
+
     return (
       <View style={styles.container}>
           <FlatList
@@ -190,52 +174,12 @@ class List extends Component {
            ListFooterComponent={this.getListBottom()}
            renderItem={
              ({item}) => {
-               let director = '';
-               if(item.directors.length > 0){  //当导演数据为空的时候，进行数据处理
-                 director = item.directors[0].name;
-               }else{
-                  director = '未知';
-               }
+               console.log(this.props)
                return (
-                <TouchableOpacity onPress={()=> {
-                  navigate('Detail', { id: item.id, title: item.title });
-                }}>
-                  <View style={styles.itemWrap}>
-
-                   <View style={layoutStyles.flex2}>
-                     <Image source={{uri:item.images.medium}} style={{width:87, height: 120}}
-                       resizeMode="contain" />
-                   </View>
-
-                   <View style={[layoutStyles.flex4,{paddingHorizontal:6}]}>
-                      <Text style={styles.itemTitle}>{item.title}</Text>
-                      <Text>{item.genres.join('/')}</Text>
-                      <Text>导演:{director}</Text>
-                      <Text>{utils.getActor(item.casts)}</Text>
-                      <Text>{item.pubdates[item.pubdates.length - 1]}</Text>
-                   </View>
-
-                   <View style={[layoutStyles.flex2, layoutStyles.flexColumn, {alignItems:'flex-end'}]}>
-                     <View>
-                       <Text style={[styles.score,layoutStyles.txtRight]}>{utils.getScore(item.rating.average)}</Text>
-                     </View>
-                     <View style={{marginTop:30}}>
-                       <Button style={{width:60}} onPress={()=> {
-                       navigate('Detail', { id: item.id, title: item.title });
-                     }} title="更多" color="#EF4238" />
-                    </View>
-
-
-                   </View>
-
-                 </View>
-               </TouchableOpacity>
+                 <ListItem data={item} {...this.props} />
                )
              }
-         }
-         />
-
-
+           } />
       </View>
     );
   }

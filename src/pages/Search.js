@@ -13,28 +13,13 @@ import {
 import {Toast} from 'antd-mobile';
 import * as utils from '../utils';
 import { layoutStyles } from '../styles/layout';
-import { Button } from '../components/';
+import { Button, ListItem } from '../components/';
 
 const styles = StyleSheet.create({
   container: {
    flex: 1,
    paddingTop: 10,
    backgroundColor:'#fff'
-  },
-  itemTitle:{
-    fontSize:18,
-  },
-  itemWrap:{
-    flexDirection: 'row',
-    paddingTop:10,
-    paddingBottom:10,
-    paddingLeft:10,
-    paddingRight:10
-  },
-  score:{
-    color: '#ffc600',
-    fontWeight: 'bold',
-    fontSize:15
   },
 });
 
@@ -43,11 +28,12 @@ class Search extends Component {
   constructor(props){
     super(props);
     this.state = {
+      topLoading: false,
       loading: false,    //底部loading
       refreshing: false,  //顶部loading
       filmListData : [],
-      filmListTotal : 0,
-      searchTxt : '西游', //搜索词
+      filmListTotal : -1,
+      searchTxt : '', //搜索词
       start : 0,
       count : 8,
       page : 1
@@ -72,11 +58,14 @@ class Search extends Component {
 
     getData = () => {
         let api = this.getApiUrl();
-        let url = `${api}&q=${this.state.searchTxt}&start=${this.state.start}&count=${this.state.count}`;
-        console.log(url)
+        let url = `${api}&q=${this.state.searchTxt}&start=0&count=${this.state.count}`;
+        console.log(url);
         this.setState({
-          loading : true
+          loading : true,
+          filmListData :[],
+          filmListTotal: -1,
         });
+
         fetch(url, {method: 'GET'})
         .then((res) => { return res.json();})
         .then((resTxt) =>{
@@ -84,12 +73,16 @@ class Search extends Component {
             this.setState({
               loading : false,
               filmListData :resTxt.subjects,
-              filmListTotal: resTxt.total
+              filmListTotal: resTxt.total,
+              start : 0,
+              count : 8,
+              page : 1
             })
           }
         }).catch((error) => {
           Toast.info('网络错误', 1);
         }).done();
+
     }
 
     onRefresh = () => {
@@ -167,8 +160,8 @@ class Search extends Component {
           size="large" color="#e54847" animating={this.state.loading} />
         )
       }
-
-      if(filmListData.length >= filmListTotal){
+      // -1 解决刚进入时，底线出现问题
+      if(filmListData.length >= filmListTotal && filmListTotal != -1){
         return (
           <View style={{alignItems:'center', paddingVertical:20}}>
             <Text style={{fontSize:12,color:'#999999'}}>
@@ -183,7 +176,7 @@ class Search extends Component {
       const { navigate } = this.props.navigation;
       return (
         <View style={styles.container}>
-            <View style={[layoutStyles.flexRow,{paddingHorizontal:16}]}>
+            <View style={[layoutStyles.flexRow,{paddingHorizontal:16,marginTop:30,}]}>
               <View style={layoutStyles.flex5}>
                 <TextInput
                   style={{height: 40}}
@@ -211,50 +204,10 @@ class Search extends Component {
              ListFooterComponent={this.getListBottom()}
              renderItem={
                ({item}) => {
-                 let director = '';
-                 if(item.directors.length > 0){  //当导演数据为空的时候，进行数据处理
-                   director = item.directors[0].name;
-                 }else{
-                    director = '未知';
-                 }
-                 return (
-                  <TouchableOpacity onPress={()=> {
-                    navigate('Detail', { id: item.id, title: item.title });
-                  }}>
-                    <View style={styles.itemWrap}>
-
-                     <View style={layoutStyles.flex2}>
-                       <Image source={{uri:item.images.medium}} style={{width:87, height: 120}}
-                         resizeMode="contain" />
-                     </View>
-
-                     <View style={[layoutStyles.flex4,{paddingHorizontal:6}]}>
-                        <Text style={styles.itemTitle}>{item.title}</Text>
-                        <Text>{item.genres.join('/')}</Text>
-                        <Text>导演:{director}</Text>
-                        <Text>{utils.getActor(item.casts)}</Text>
-                        <Text>{item.pubdates[item.pubdates.length - 1]}</Text>
-                     </View>
-
-                     <View style={[layoutStyles.flex2, layoutStyles.flexColumn, {alignItems:'flex-end'}]}>
-                       <View>
-                         <Text style={[styles.score,layoutStyles.txtRight]}>{utils.getScore(item.rating.average)}</Text>
-                       </View>
-                       <View style={{marginTop:30}}>
-                         <Button style={{width:60}} onPress={()=> {
-                         navigate('Detail', { id: item.id, title: item.title });
-                       }} title="更多" color="#EF4238" />
-                      </View>
-
-
-                     </View>
-
-                   </View>
-                 </TouchableOpacity>
-                 )
-               }
-           }
-           />
+                 return(
+                   <ListItem data={item} {...this.props} />
+                 )}
+             } />
 
 
         </View>
