@@ -18,9 +18,18 @@ import { Button, ListItem } from '../components/';
 const styles = StyleSheet.create({
   container: {
    flex: 1,
-   paddingTop: 10,
    backgroundColor:'#fff'
   },
+  searchTop:{paddingHorizontal:10,paddingVertical:14,backgroundColor:'#fafafa'},
+  searchInput:{
+    height: 32,
+    borderRadius:20,
+    margin:0,
+    padding:0,
+    paddingLeft:14,
+    backgroundColor:'#ebebeb'
+  },
+  searchGoBack:{width:60,alignItems:'center',paddingVertical:6,}
 });
 
 class Search extends Component {
@@ -57,9 +66,9 @@ class Search extends Component {
         console.log(url);
 
         let {searchTxt} = this.state;
-        if(utils.trim(searchTxt) == ''){
+        if(utils.trim(searchTxt) == ''){//搜索词
           console.log('请输入关键词')
-          Toast.info('请输入搜索词', 1);
+          // Toast.info('请输入搜索词', 1);
           return;
         }
 
@@ -67,24 +76,25 @@ class Search extends Component {
           loading : true,
           filmListData :[],
           filmListTotal: -1,
+        }, () => {
+          fetch(url, {method: 'GET'})
+          .then((res) => { return res.json();})
+          .then((resTxt) =>{
+            if (!this.ignoreLastFetch){
+              this.setState({
+                loading : false,
+                filmListData :resTxt.subjects,
+                filmListTotal: resTxt.total,
+                start : 0,
+                count : 8,
+                page : 1
+              })
+            }
+          }).catch((error) => {
+            Toast.info('网络错误', 1);
+          }).done();
         });
 
-        fetch(url, {method: 'GET'})
-        .then((res) => { return res.json();})
-        .then((resTxt) =>{
-          if (!this.ignoreLastFetch){
-            this.setState({
-              loading : false,
-              filmListData :resTxt.subjects,
-              filmListTotal: resTxt.total,
-              start : 0,
-              count : 8,
-              page : 1
-            })
-          }
-        }).catch((error) => {
-          Toast.info('网络错误', 1);
-        }).done();
 
     }
 
@@ -157,13 +167,14 @@ class Search extends Component {
     getListBottom = () => {
       let {loading, filmListData, filmListTotal} = this.state;
 
-      if(loading){
+      if(loading){  //如果正在加载中，FlatList底部使用 loading组件
         return (
           <ActivityIndicator style={{paddingVertical:10}}
           size="large" color="#e54847" animating={this.state.loading} />
         )
       }
-      // -1 解决刚进入时，底线出现问题
+      // 当state中列表数据长度 和 接口中数据总长度相同时，提示到底部了
+      // -1 解决刚进入时，底线默认出现的问题
       if(filmListData.length >= filmListTotal && filmListTotal != -1){
         return (
           <View style={{alignItems:'center', paddingVertical:20}}>
@@ -176,24 +187,36 @@ class Search extends Component {
     }
 
     render() {
-      const { navigate } = this.props.navigation;
+      const { navigate, goBack } = this.props.navigation;
+      // onSubmitEditing={()=>{this.getData()}}
+      // ListEmptyComponent={<Text>空列表</Text>}
+      // <View style={layoutStyles.flex1}>
+      //     <Button style={{width:60}} onPress={()=> {
+      //       this.getData();
+      //   }} title="搜索" color="#EF4238" />
+      // </View>
       return (
         <View style={styles.container}>
-            <View style={[layoutStyles.flexRow,{paddingHorizontal:16,marginTop:30,}]}>
-              <View style={layoutStyles.flex5}>
+            <View style={[layoutStyles.flexRow,styles.searchTop]}>
+              <View style={layoutStyles.flex6}>
                 <TextInput
-                  style={{height: 40}}
+                  style={styles.searchInput}
                   placeholder="请输入搜索内容"
-                  onChangeText={(text) => this.setState({searchTxt:text})}
-                  onSubmitEditing={()=>{this.getData()}}
+                  underlineColorAndroid="transparent"
+                  onChangeText={(text) => {
+                    this.setState({searchTxt:text},()=>{
+                      this.getData();
+                    });
+                  }}
                   value={this.state.searchText}
                 />
               </View>
-              <View style={layoutStyles.flex1}>
-                  <Button style={{width:60}} onPress={()=> {
-                    this.getData();
-                }} title="搜索" color="#EF4238" />
-              </View>
+
+              <TouchableOpacity
+                style={[layoutStyles.flex1,styles.searchGoBack]}
+                onPress={ ()=> { goBack();} }>
+                  <Text style={{color:'#f2554f'}}>取消</Text>
+              </TouchableOpacity>
 
             </View>
 
@@ -205,6 +228,11 @@ class Search extends Component {
              onRefresh={this.onRefresh}
              refreshing={this.state.refreshing}
              ListFooterComponent={this.getListBottom()}
+             ListEmptyComponent={
+               <View style={{alignItems:'center',marginTop:30}}>
+                 <Text>搜索词可为电影名或影人</Text>
+               </View>
+             }
              renderItem={
                ({item}) => {
                  return(
