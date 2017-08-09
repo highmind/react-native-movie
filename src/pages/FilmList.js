@@ -37,10 +37,10 @@ const FilmList = TabNavigator({
       navigationOptions:({ navigation }) => ({
           title: '芝麻电影',
           headerRight:
-          <TouchableHighlight style={{marginRight:10}} onPress={()=>{
-                navigation.navigate('Search', { id:123, title: '搜索'});
+          <TouchableHighlight activeOpacity={0.6} underlayColor={'#d43d3d'} style={{padding:20}} onPress={()=>{
+                navigation.navigate('Search');
             }}>
-            <View>
+            <View style={{}}>
                 <Icon type={'\ue670'} size="md" color="#fff" />
             </View>
           </TouchableHighlight>,

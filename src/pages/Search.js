@@ -41,15 +41,10 @@ class Search extends Component {
   }
 
     static navigationOptions = ({ navigation }) => ({
-      title: navigation.state.params.title,
       header:null, //设置为null,则隐藏header
     });
 
-    componentDidMount(){
-        const { params } = this.props.navigation.state; //从上个 screen 传过来的参数
-        console.log(params);
-
-    }
+    componentDidMount(){}
 
     getApiUrl = () => {
         let api = 'http://api.douban.com/v2/movie/search?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC';
