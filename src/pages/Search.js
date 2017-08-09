@@ -42,11 +42,14 @@ class Search extends Component {
       refreshing: false,  //顶部loading
       filmListData : [],
       filmListTotal : -1,
+      ended: false,
       searchTxt : '', //搜索词
       start : 0,
       count : 8,
       page : 1
     }
+
+    this.isFetch = false;
   }
 
     static navigationOptions = ({ navigation }) => ({
@@ -77,22 +80,25 @@ class Search extends Component {
           filmListData :[],
           filmListTotal: -1,
         }, () => {
-          fetch(url, {method: 'GET'})
-          .then((res) => { return res.json();})
-          .then((resTxt) =>{
-            if (!this.ignoreLastFetch){
-              this.setState({
-                loading : false,
-                filmListData :resTxt.subjects,
-                filmListTotal: resTxt.total,
-                start : 0,
-                count : 8,
-                page : 1
-              })
-            }
-          }).catch((error) => {
-            Toast.info('网络错误', 1);
-          }).done();
+          if(!this.isFetch){  //如果fetch没有正在请求
+            this.isFetch = true;
+            fetch(url, {method: 'GET'})
+            .then((res) => { return res.json();})
+            .then((resTxt) =>{
+                this.setState({
+                  loading : false,
+                  filmListData :resTxt.subjects,
+                  filmListTotal: resTxt.total,
+                  start : 0,
+                  count : 8,
+                  page : 1
+                });
+                this.isFetch = false
+            }).catch((error) => {
+              Toast.info('网络错误', 1);
+            }).done();
+          }
+
         });
 
 
@@ -130,13 +136,15 @@ class Search extends Component {
 
     componentWillUnmount(){
       console.log('... componentWillUnmount ...');
-      this.ignoreLastFetch = true;
+      this.isFetch = false;
       Toast.hide();
     }
 
     loadMore = () => {
-      let {loading, filmListData, filmListTotal} = this.state;
-      if(!loading && filmListData.length < filmListTotal){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
+      console.log('loadMore')
+      let {loading, ended} = this.state;
+      console.log(this.state);
+      if(!loading && !ended){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
         this.setState({
           loading : true
         });
@@ -150,14 +158,20 @@ class Search extends Component {
         fetch(url, {method: 'GET'})
         .then((res) => {return res.json();})
         .then((resTxt) =>{
-          if (!this.ignoreLastFetch){
-            this.setState({
-              loading: false,
-              start : tStart,
-              page :tPage,
-              filmListData :[...this.state.filmListData,...resTxt.subjects]
-            })
-          }
+           if(resTxt.subjects.length != 0){
+             this.setState({
+               loading: false,
+               start : tStart,
+               page :tPage,
+               filmListData :[...this.state.filmListData,...resTxt.subjects]
+             })
+           }else{
+             this.setState({
+               loading: false,
+               ended: true
+             })
+           }
+
         }).catch((error) => {
           Toast.info('网络错误', 1);
         }).done();
@@ -165,7 +179,7 @@ class Search extends Component {
     }
 
     getListBottom = () => {
-      let {loading, filmListData, filmListTotal} = this.state;
+      let {loading, ended, filmListData, filmListTotal} = this.state;
 
       if(loading){  //如果正在加载中，FlatList底部使用 loading组件
         return (
@@ -175,7 +189,7 @@ class Search extends Component {
       }
       // 当state中列表数据长度 和 接口中数据总长度相同时，提示到底部了
       // -1 解决刚进入时，底线默认出现的问题
-      if(filmListData.length >= filmListTotal && filmListTotal != -1){
+      if(ended && filmListTotal != -1){
         return (
           <View style={{alignItems:'center', paddingVertical:20}}>
             <Text style={{fontSize:12,color:'#999999'}}>
@@ -190,6 +204,8 @@ class Search extends Component {
       const { navigate, goBack } = this.props.navigation;
       // onSubmitEditing={()=>{this.getData()}}
       // ListEmptyComponent={<Text>空列表</Text>}
+      // onEndEditing={()=>{this.getData();}}
+      // onChange={()=>{this.getData();}}
       // <View style={layoutStyles.flex1}>
       //     <Button style={{width:60}} onPress={()=> {
       //       this.getData();
@@ -203,10 +219,9 @@ class Search extends Component {
                   style={styles.searchInput}
                   placeholder="请输入搜索内容"
                   underlineColorAndroid="transparent"
+                  onChange={()=>{this.getData();}}
                   onChangeText={(text) => {
-                    this.setState({searchTxt:text},()=>{
-                      this.getData();
-                    });
+                    this.setState({searchTxt:text});
                   }}
                   value={this.state.searchText}
                 />
