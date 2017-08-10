@@ -42,6 +42,10 @@
       2. 支持上拉加载
       3. keyExtractor属性指定使用id作为列表每一项的key
 
+### 问题
+  1. FlatList问题
+    * onEndReached在数据为空的时候，或者在返回数据不足一屏高度时，会再次触发
+
 ### 路由和界面切换
   1. 使用react-navigation
     * StackNavigator 堆栈式
@@ -54,6 +58,8 @@
    ``` javascript
    ./gradlew assembleRelease
    ```
+
+
 ### 实现功能
   1. 即将上映
   2. 正在热映

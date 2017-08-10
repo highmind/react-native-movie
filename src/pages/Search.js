@@ -37,7 +37,6 @@ class Search extends Component {
   constructor(props){
     super(props);
     this.state = {
-      topLoading: false,
       loading: false,    //底部loading
       refreshing: false,  //顶部loading
       filmListData : [],
@@ -71,6 +70,17 @@ class Search extends Component {
         let {searchTxt} = this.state;
         if(utils.trim(searchTxt) == ''){//搜索词
           console.log('请输入关键词')
+          this.setState({
+            loading: false,    //底部loading
+            refreshing: false,  //顶部loading
+            filmListData : [],
+            filmListTotal : -1,
+            ended: false,
+            searchTxt : '', //搜索词
+            start : 0,
+            count : 8,
+            page : 1
+          });
           // Toast.info('请输入搜索词', 1);
           return;
         }
@@ -79,6 +89,9 @@ class Search extends Component {
           loading : true,
           filmListData :[],
           filmListTotal: -1,
+          start : 0,
+          count : 8,
+          page : 1
         }, () => {
           //if(!this.isFetch){  //如果fetch没有正在请求
             //this.isFetch = true;
@@ -140,11 +153,19 @@ class Search extends Component {
       Toast.hide();
     }
 
-    loadMore = () => {
+    loadMore = () => {  //在数据为空，且不足一屏高度时，会出现默认执行loadmore的情况
       console.log('loadMore')
-      let {loading, ended} = this.state;
+      let {loading, ended, searchTxt} = this.state;
+
+      if(utils.trim(searchTxt) == ''){  //搜索词为空时，不执行，默认指向loadmore情况
+        console.log('请输入关键词')
+        // Toast.info('请输入搜索词', 1);
+        return;
+      }
       console.log(this.state);
-      if(!loading && !ended){ //上拉时，判断是否在请求数据，如果上次未完成，则不发起请求
+      //上拉时，判断是否在请求数据，如果上次未完成 且 数据已到底 ，则不发起请求
+      if(!loading && !ended){
+        console.log('loadmore Fetch')
         this.setState({
           loading : true
         });
@@ -154,15 +175,17 @@ class Search extends Component {
 
         let api = this.getApiUrl();
         let url = `${api}&q=${searchTxt}&start=${tStart}&count=${this.state.count}`;
-
+        console.log(url)
         fetch(url, {method: 'GET'})
         .then((res) => {return res.json();})
         .then((resTxt) =>{
+          console.log(resTxt.subjects.length)
            if(resTxt.subjects.length != 0){
              this.setState({
                loading: false,
                start : tStart,
                page :tPage,
+               filmListTotal: resTxt.total,
                filmListData :[...this.state.filmListData,...resTxt.subjects]
              })
            }else{
@@ -219,9 +242,10 @@ class Search extends Component {
                   style={styles.searchInput}
                   placeholder="请输入搜索内容"
                   underlineColorAndroid="transparent"
-                  onChange={()=>{this.getData();}}
                   onChangeText={(text) => {
-                    this.setState({searchTxt:text});
+                    this.setState({searchTxt:text},()=>{
+                      this.getData()
+                    });
                   }}
                   value={this.state.searchTxt}
                 />
@@ -242,6 +266,7 @@ class Search extends Component {
              onEndReachedThreshold={0.5}
              onRefresh={this.onRefresh}
              refreshing={this.state.refreshing}
+             getItemLayout={(item, index) => ({length: 140, offset: 140 * index, index})}
              ListFooterComponent={this.getListBottom()}
              ListEmptyComponent={
                <View style={{alignItems:'center',marginTop:30}}>

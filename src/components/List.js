@@ -119,7 +119,6 @@ class List extends Component {
 
       let api = this.getApiUrl();
       let url = `${api}&start=${tStart}&count=${this.state.count}`;
-
       fetch(url, {method: 'GET'})
       .then((res) => {return res.json();})
       .then((resTxt) =>{
@@ -174,7 +173,6 @@ class List extends Component {
            ListFooterComponent={this.getListBottom()}
            renderItem={
              ({item}) => {
-               console.log(this.props)
                return (
                  <ListItem data={item} {...this.props} />
                )
