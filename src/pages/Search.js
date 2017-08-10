@@ -49,7 +49,7 @@ class Search extends Component {
       page : 1
     }
 
-    this.isFetch = false;
+    //this.isFetch = false;
   }
 
     static navigationOptions = ({ navigation }) => ({
@@ -80,8 +80,8 @@ class Search extends Component {
           filmListData :[],
           filmListTotal: -1,
         }, () => {
-          if(!this.isFetch){  //如果fetch没有正在请求
-            this.isFetch = true;
+          //if(!this.isFetch){  //如果fetch没有正在请求
+            //this.isFetch = true;
             fetch(url, {method: 'GET'})
             .then((res) => { return res.json();})
             .then((resTxt) =>{
@@ -93,11 +93,11 @@ class Search extends Component {
                   count : 8,
                   page : 1
                 });
-                this.isFetch = false
+                //this.isFetch = false
             }).catch((error) => {
               Toast.info('网络错误', 1);
             }).done();
-          }
+        //  }
 
         });
 
@@ -136,7 +136,7 @@ class Search extends Component {
 
     componentWillUnmount(){
       console.log('... componentWillUnmount ...');
-      this.isFetch = false;
+      //this.isFetch = false;
       Toast.hide();
     }
 
@@ -223,7 +223,7 @@ class Search extends Component {
                   onChangeText={(text) => {
                     this.setState({searchTxt:text});
                   }}
-                  value={this.state.searchText}
+                  value={this.state.searchTxt}
                 />
               </View>
 
