@@ -38,7 +38,7 @@ class Search extends Component {
     super(props);
     this.state = {
       loading: false,    //底部loading
-      refreshing: false,  //顶部loading
+      refreshing: false,  //顶部刷新loading
       filmListData : [],
       filmListTotal : -1,
       ended: false,
@@ -84,7 +84,7 @@ class Search extends Component {
           // Toast.info('请输入搜索词', 1);
           return;
         }
-
+        // 搜索词变化时，getData在不断触发，需要清除 数据
         this.setState({
           loading : true,
           filmListData :[],
@@ -98,6 +98,8 @@ class Search extends Component {
             fetch(url, {method: 'GET'})
             .then((res) => { return res.json();})
             .then((resTxt) =>{
+              let {searchTxt} = this.state;
+              if(searchTxt != ''){ //搜索词不为空的时候，改变列表状态，用于解决删除文字时，异步请求慢问题
                 this.setState({
                   loading : false,
                   filmListData :resTxt.subjects,
@@ -106,6 +108,7 @@ class Search extends Component {
                   count : 8,
                   page : 1
                 });
+              }
                 //this.isFetch = false
             }).catch((error) => {
               Toast.info('网络错误', 1);
@@ -130,7 +133,6 @@ class Search extends Component {
         }).then((res) => {
           return res.json(); //转换为json格式
         }).then((resTxt) =>{
-          if (!this.ignoreLastFetch){
             this.setState({
               refreshing : false,
               filmListData :resTxt.subjects,
@@ -139,7 +141,6 @@ class Search extends Component {
               count : 8,
               page : 1
             })
-          }
         }).catch((error) => {
           Toast.info('网络错误', 1);
         }).done();
@@ -179,8 +180,7 @@ class Search extends Component {
         fetch(url, {method: 'GET'})
         .then((res) => {return res.json();})
         .then((resTxt) =>{
-          console.log(resTxt.subjects.length)
-           if(resTxt.subjects.length != 0){
+           if(resTxt.subjects.length != 0){ //如果下一页数据不为空，
              this.setState({
                loading: false,
                start : tStart,
@@ -188,7 +188,7 @@ class Search extends Component {
                filmListTotal: resTxt.total,
                filmListData :[...this.state.filmListData,...resTxt.subjects]
              })
-           }else{
+           }else{ //下一页数据为空，设置 ended为 true，标识列表数据到底
              this.setState({
                loading: false,
                ended: true
@@ -242,6 +242,7 @@ class Search extends Component {
                   style={styles.searchInput}
                   placeholder="请输入搜索内容"
                   underlineColorAndroid="transparent"
+                  onEndEditing={()=>{console.log('编辑结束')}}
                   onChangeText={(text) => {
                     this.setState({searchTxt:text},()=>{
                       this.getData()

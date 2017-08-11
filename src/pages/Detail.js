@@ -118,7 +118,7 @@ class Detail extends Component{
 
           return(
               <View style={{padding:6,width:110}} key={index}>
-                <TouchableOpacity onPress={()=>{
+                <TouchableOpacity activeOpacity={0.8} onPress={()=>{
                     navigate('Celebrity', { id:dData.id, title: dData.name});
                   }}>
                   <Image resizeMode="contain" source={imgData} style={{width:100, height: 139}} />
@@ -154,7 +154,7 @@ class Detail extends Component{
 
           return(
               <View style={{marginLeft:6,width:180}} key={index}>
-                <TouchableOpacity onPress={()=>{
+                <TouchableOpacity activeOpacity={0.8} onPress={()=>{
                     navigate('Video', { id: dData.id, title: dData.title});
                   }}>
                   <Image resizeMode="contain" source={imgData} style={{width:180, height: 101}} />

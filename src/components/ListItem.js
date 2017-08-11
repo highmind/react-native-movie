@@ -33,9 +33,9 @@ const ListItem = (props) => {
   let { data } = props;
   let { navigate } = props.navigation;
   return (
-    <TouchableOpacity onPress={()=> {
+    <TouchableOpacity activeOpacity={0.8}  onPress={()=> {
       navigate('Detail', { id: data.id, title: data.title });}}>
-      <View style={styles.itemWrap}>
+      <View style={[layoutStyles.flexRow,styles.itemWrap]}>
 
        <View style={layoutStyles.flex2}>
          <Image source={{uri:data.images.medium}}
