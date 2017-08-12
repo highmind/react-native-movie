@@ -45,7 +45,11 @@
 ### 问题
   1. FlatList问题
     * onEndReached在数据为空的时候，或者在返回数据不足一屏高度时，会再次触发
-
+  2. TextInput实时搜索问题
+    * 快速输入和删除问题
+    * 需要使用lodash.debounce
+    * 节流控制
+    * 请求时序控制
 ### 路由和界面切换
   1. 使用react-navigation
     * StackNavigator 堆栈式

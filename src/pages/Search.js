@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import {Toast} from 'antd-mobile';
+import {debounce} from 'lodash';
 import * as utils from '../utils';
 import { layoutStyles } from '../styles/layout';
 import { Button, ListItem } from '../components/';
@@ -47,8 +48,8 @@ class Search extends Component {
       count : 8,
       page : 1
     }
-
-    //this.isFetch = false;
+    this.lastFetchId = 0;  //请求时序控制
+    this.getData = debounce(this.getData, 300); //节流控制
   }
 
     static navigationOptions = ({ navigation }) => ({
@@ -65,58 +66,48 @@ class Search extends Component {
     getData = () => {
         let api = this.getApiUrl();
         let url = `${api}&q=${this.state.searchTxt}&start=0&count=${this.state.count}`;
-        console.log(url);
+
+        this.lastFetchId += 1;
+        const fetchId = this.lastFetchId;
 
         let {searchTxt} = this.state;
-        if(utils.trim(searchTxt) == ''){//搜索词
-          console.log('请输入关键词')
-          this.setState({
-            loading: false,    //底部loading
-            refreshing: false,  //顶部loading
-            filmListData : [],
-            filmListTotal : -1,
-            ended: false,
-            searchTxt : '', //搜索词
-            start : 0,
-            count : 8,
-            page : 1
-          });
-          // Toast.info('请输入搜索词', 1);
-          return;
-        }
+        // if(utils.trim(searchTxt) == ''){//搜索词
+        //   console.log('请输入关键词')
+        //   this.setState({
+        //     loading: false,    //底部loading
+        //     refreshing: false,  //顶部loading
+        //     filmListData : [],
+        //     filmListTotal : -1,
+        //     ended: false,
+        //     searchTxt : '', //搜索词
+        //     start : 0,
+        //     count : 8,
+        //     page : 1
+        //   });
+        //   return;
+        // }
+
+
         // 搜索词变化时，getData在不断触发，需要清除 数据
-        this.setState({
-          loading : true,
-          filmListData :[],
-          filmListTotal: -1,
-          start : 0,
-          count : 8,
-          page : 1
-        }, () => {
-          //if(!this.isFetch){  //如果fetch没有正在请求
-            //this.isFetch = true;
             fetch(url, {method: 'GET'})
-            .then((res) => { return res.json();})
+            .then((res) => {return res.json();})
             .then((resTxt) =>{
-              let {searchTxt} = this.state;
-              if(searchTxt != ''){ //搜索词不为空的时候，改变列表状态，用于解决删除文字时，异步请求慢问题
-                this.setState({
-                  loading : false,
-                  filmListData :resTxt.subjects,
-                  filmListTotal: resTxt.total,
-                  start : 0,
-                  count : 8,
-                  page : 1
-                });
+              if (fetchId !== this.lastFetchId) { // for fetch callback order
+                return;
               }
-                //this.isFetch = false
+
+              let {searchTxt} = this.state;
+              this.setState({
+                loading : false,
+                filmListData :resTxt.subjects,
+                filmListTotal: resTxt.total,
+                start : 0,
+                count : 8,
+                page : 1
+              });
             }).catch((error) => {
               Toast.info('网络错误', 1);
             }).done();
-        //  }
-
-        });
-
 
     }
 
@@ -150,7 +141,6 @@ class Search extends Component {
 
     componentWillUnmount(){
       console.log('... componentWillUnmount ...');
-      //this.isFetch = false;
       Toast.hide();
     }
 
@@ -159,14 +149,11 @@ class Search extends Component {
       let {loading, ended, searchTxt} = this.state;
 
       if(utils.trim(searchTxt) == ''){  //搜索词为空时，不执行，默认指向loadmore情况
-        console.log('请输入关键词')
-        // Toast.info('请输入搜索词', 1);
         return;
       }
-      console.log(this.state);
+
       //上拉时，判断是否在请求数据，如果上次未完成 且 数据已到底 ，则不发起请求
       if(!loading && !ended){
-        console.log('loadmore Fetch')
         this.setState({
           loading : true
         });
@@ -176,7 +163,6 @@ class Search extends Component {
 
         let api = this.getApiUrl();
         let url = `${api}&q=${searchTxt}&start=${tStart}&count=${this.state.count}`;
-        console.log(url)
         fetch(url, {method: 'GET'})
         .then((res) => {return res.json();})
         .then((resTxt) =>{
@@ -225,15 +211,6 @@ class Search extends Component {
 
     render() {
       const { navigate, goBack } = this.props.navigation;
-      // onSubmitEditing={()=>{this.getData()}}
-      // ListEmptyComponent={<Text>空列表</Text>}
-      // onEndEditing={()=>{this.getData();}}
-      // onChange={()=>{this.getData();}}
-      // <View style={layoutStyles.flex1}>
-      //     <Button style={{width:60}} onPress={()=> {
-      //       this.getData();
-      //   }} title="搜索" color="#EF4238" />
-      // </View>
       return (
         <View style={styles.container}>
             <View style={[layoutStyles.flexRow,styles.searchTop]}>
@@ -244,9 +221,15 @@ class Search extends Component {
                   underlineColorAndroid="transparent"
                   onEndEditing={()=>{console.log('编辑结束')}}
                   onChangeText={(text) => {
-                    this.setState({searchTxt:text},()=>{
-                      this.getData()
-                    });
+                    this.setState({
+                      searchTxt:text,
+                      filmListData :[],
+                      filmListTotal: -1,
+                      start : 0,
+                      count : 8,
+                      page : 1,
+                      loading : true,
+                    }, this.getData);
                   }}
                   value={this.state.searchTxt}
                 />
@@ -280,7 +263,6 @@ class Search extends Component {
                    <ListItem data={item} {...this.props} />
                  )}
              } />
-
 
         </View>
       );
