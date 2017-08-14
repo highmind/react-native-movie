@@ -34,6 +34,10 @@ export let trim = (data) => {
   return data.replace(/^\s+|\s+$/gm,'');
 }
 
+export let getPubDate = (data) => {
+  return (data.length == 0 ? '上映时间未知': data[data.length - 1])
+}
+
 export function makeCancelable(promise){
    let hasCanceled_ = false;
    const wrappedPromise = new Promise((resolve, reject) => {

@@ -16,10 +16,7 @@ const styles = StyleSheet.create({
   },
   itemWrap:{
     flexDirection: 'row',
-    paddingTop:10,
-    paddingBottom:10,
-    paddingLeft:10,
-    paddingRight:10
+    padding:10
   },
   score:{
     color: '#ffc600',
@@ -48,7 +45,7 @@ const ListItem = (props) => {
           <Text>{data.genres.join('/')}</Text>
           <Text>导演:{utils.getDirector(data.directors)}</Text>
           <Text>{utils.getActor(data.casts)}</Text>
-          <Text>{data.pubdates[data.pubdates.length - 1]}</Text>
+          <Text>{utils.getPubDate(data.pubdates)}</Text>
        </View>
 
        <View style={[layoutStyles.flex2, layoutStyles.flexColumn, {alignItems:'flex-end'}]}>

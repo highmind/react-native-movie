@@ -45,7 +45,7 @@ class Search extends Component {
       ended: false,
       searchTxt : '', //搜索词
       start : 0,
-      count : 8,
+      count : 12,
       page : 1
     }
     this.lastFetchId = 0;  //请求时序控制
@@ -102,7 +102,6 @@ class Search extends Component {
                 filmListData :resTxt.subjects,
                 filmListTotal: resTxt.total,
                 start : 0,
-                count : 8,
                 page : 1
               });
             }).catch((error) => {
@@ -129,7 +128,6 @@ class Search extends Component {
               filmListData :resTxt.subjects,
               filmListTotal: resTxt.total,
               start : 0,
-              count : 8,
               page : 1
             })
         }).catch((error) => {
@@ -209,6 +207,15 @@ class Search extends Component {
       }
     }
 
+
+    _separator = () => {
+      return (
+        <View style={
+              {marginHorizontal:10, height: 1, backgroundColor: '#E6E6E6' }
+            }></View>
+      )
+    }
+
     render() {
       const { navigate, goBack } = this.props.navigation;
       return (
@@ -226,7 +233,6 @@ class Search extends Component {
                       filmListData :[],
                       filmListTotal: -1,
                       start : 0,
-                      count : 8,
                       page : 1,
                       loading : true,
                     }, this.getData);
@@ -250,8 +256,9 @@ class Search extends Component {
              onEndReachedThreshold={0.5}
              onRefresh={this.onRefresh}
              refreshing={this.state.refreshing}
-             getItemLayout={(item, index) => ({length: 140, offset: 140 * index, index})}
+             getItemLayout={(item, index) => ({length: 140, offset: 142 * index, index})}
              ListFooterComponent={this.getListBottom()}
+             ItemSeparatorComponent={this._separator}
              ListEmptyComponent={
                <View style={{alignItems:'center',marginTop:30}}>
                  <Text>搜索词可为电影名或影人</Text>

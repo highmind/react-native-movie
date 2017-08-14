@@ -200,7 +200,7 @@ class Detail extends Component{
       alt,
       aka=[],
       durations=[],
-      pubdate,
+      pubdates=[],
       wish_count,
       rating={average:0},
       countries=[],
@@ -235,7 +235,7 @@ class Detail extends Component{
                 <Text style={styles.score}>{utils.getScore(rating.average)}{'\n'}</Text>
                 <Text>{utils.getGenres(genres)}{'\n'}</Text>
                 <Text>{countries[0]} {durations[durations.length-1]}{'\n'}</Text>
-                <Text>{pubdate} 大陆上映 </Text>
+                <Text>{utils.getPubDate(pubdates)} </Text>
               </Text>
             </View>
 

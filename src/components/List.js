@@ -32,7 +32,7 @@ class List extends Component {
       filmListData : [],
       filmListTotal : 0,
       start : 0,
-      count : 8,
+      count : 12,
       page : 1
     }
   }
@@ -91,7 +91,6 @@ class List extends Component {
             filmListData :resTxt.subjects,
             filmListTotal: resTxt.total,
             start : 0,
-            count : 8,
             page : 1
           })
         }
@@ -159,6 +158,14 @@ class List extends Component {
     }
   }
 
+  _separator = () => {
+    return (
+      <View style={
+            {marginHorizontal:10, height: 1, backgroundColor: '#E6E6E6' }
+          }></View>
+    )
+  }
+
   render() {
 
     return (
@@ -170,7 +177,9 @@ class List extends Component {
            onEndReachedThreshold={0.5}
            onRefresh={this.onRefresh}
            refreshing={this.state.refreshing}
+           getItemLayout={(item, index) => ({length: 150, offset: 150 * index, index})}
            ListFooterComponent={this.getListBottom()}
+           ItemSeparatorComponent={this._separator}
            renderItem={
              ({item}) => {
                return (
