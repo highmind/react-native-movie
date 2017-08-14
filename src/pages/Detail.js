@@ -63,7 +63,8 @@ class Detail extends Component{
     this.state = {
       title:'',
       data: [],
-      isOpen : false
+      isOpen : false,
+      loading : false,
     }
   }
   //设置 顶栏标题
@@ -75,27 +76,29 @@ class Detail extends Component{
     console.log('....Detail...');
     Toast.loading('Loading...', 0);
     const { params } = this.props.navigation.state;
+    this.setState({
+      loading : true
+    })
+
     let url = `http://api.douban.com/v2/movie/subject/${params.id}?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC`;
     fetch(url)
     .then((res) => {return res.json()})
     .then((resTxt) => {
       Toast.hide();
-      if (!this.ignoreLastFetch){
-        console.log(resTxt);
-        this.setState({
-          title:resTxt.title,
-          data:resTxt
-        })
-      }
+      console.log(resTxt);
+      this.setState({
+        title:resTxt.title,
+        data:resTxt,
+        loading:false
+      })
     })
   }
 
   componentWillUnmount(){
-    this.ignoreLastFetch = true;
     Toast.hide();
   }
 
-  changeSummary(){
+  changeSummary = () => {
     console.log('changeSummary')
     let {isOpen} = this.state;
     console.log(isOpen)
@@ -189,85 +192,94 @@ class Detail extends Component{
   }
 
   render(){
+    let {loading} = this.state;
+    if(!loading){
+      let summaryStyle = this.state.isOpen ? 8 : 4;
+      let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
+      <Icon type="down" size="md" color="black" />;
+      let {
+        id,
+        images = [],
+        title,
+        alt,
+        aka=[],
+        durations=[],
+        pubdates=[],
+        wish_count,
+        rating={average:0},
+        countries=[],
+        summary,
+        popular_reviews=[],
+        popular_comments=[],
+        genres = [],
+        casts = [],
+        directors = [],
+        trailers = [],
+        bloopers = [],
+        clips = []
 
-    let summaryStyle = this.state.isOpen ? 8 : 4;
-    let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
-    <Icon type="down" size="md" color="black" />;
-    let {
-      id,
-      images = [],
-      title,
-      alt,
-      aka=[],
-      durations=[],
-      pubdates=[],
-      wish_count,
-      rating={average:0},
-      countries=[],
-      summary,
-      popular_reviews=[],
-      popular_comments=[],
-      genres = [],
-      casts = [],
-      directors = [],
-      trailers = [],
-      bloopers = [],
-      clips = []
+      } = this.state.data;
 
-    } = this.state.data;
+      let actorImgNode = this.getActorImg([...casts,...directors]);
+      let videoNode = this.getVideo([...trailers,...bloopers,...clips])
+      return (
+        <View style={styles.container}>
+        <ScrollView>
+          <ImageBackground source={{uri:images.medium}}>
+            <View style={[layoutStyles.flexRow, styles.head]}>
 
-    let actorImgNode = this.getActorImg([...casts,...directors]);
-    let videoNode = this.getVideo([...trailers,...bloopers,...clips])
-    return (
-      <View style={styles.container}>
-      <ScrollView>
-        <ImageBackground source={{uri:images.medium}}>
-          <View style={[layoutStyles.flexRow, styles.head]}>
+              <View style={layoutStyles.flex1}>
+                  <Image resizeMode="contain" source={{uri:images.large}} style={{width:100, height: 139}} />
+              </View>
 
-            <View style={layoutStyles.flex1}>
-                <Image resizeMode="contain" source={{uri:images.large}} style={{width:100, height: 139}} />
+              <View style={[layoutStyles.flex3,{paddingHorizontal:50}]}>
+                <Text style={[styles.whiteTxt,{lineHeight:24}]}>
+                  <Text style={styles.movieName}>{title}{'\n'}</Text>
+                  <Text>{aka[0]}{'\n'}</Text>
+                  <Text style={styles.score}>{utils.getScore(rating.average)}{'\n'}</Text>
+                  <Text>{utils.getGenres(genres)}{'\n'}</Text>
+                  <Text>{countries[0]} {durations[durations.length-1]}{'\n'}</Text>
+                  <Text>{utils.getPubDate(pubdates)} </Text>
+                </Text>
+              </View>
+
             </View>
+          </ImageBackground>
 
-            <View style={[layoutStyles.flex3,{paddingHorizontal:50}]}>
-              <Text style={[styles.whiteTxt,{lineHeight:24}]}>
-                <Text style={styles.movieName}>{title}{'\n'}</Text>
-                <Text>{aka[0]}{'\n'}</Text>
-                <Text style={styles.score}>{utils.getScore(rating.average)}{'\n'}</Text>
-                <Text>{utils.getGenres(genres)}{'\n'}</Text>
-                <Text>{countries[0]} {durations[durations.length-1]}{'\n'}</Text>
-                <Text>{utils.getPubDate(pubdates)} </Text>
-              </Text>
-            </View>
+            <View style={styles.main}>
+              <Text>演员 {utils.getActor(casts)}</Text>
 
-          </View>
-        </ImageBackground>
+              <Text style={[layoutStyles.txtBold,layoutStyles.title]}>剧情简介</Text>
 
-          <View style={styles.main}>
-            <Text>演员 {utils.getActor(casts)}</Text>
-
-            <Text style={[layoutStyles.txtBold,layoutStyles.title]}>剧情简介</Text>
-            <View style={[{alignItems: 'center'}]}>
-              <Text style={{lineHeight:24}} numberOfLines={summaryStyle}>{summary}</Text>
-              <TouchableOpacity onPress={this.changeSummary.bind(this)}>
-                  {IconNode}
+              <TouchableOpacity activeOpacity={0.8}  onPress={this.changeSummary}>
+                <Text style={{lineHeight:24}} numberOfLines={summaryStyle}>{summary}</Text>
+                <View style={{alignItems: 'center'}}>
+                    {IconNode}
+                </View>
               </TouchableOpacity>
+
+              <Text style={[layoutStyles.txtBold,layoutStyles.title]}>演职人员</Text>
+              {actorImgNode}
+
+              <Text style={[layoutStyles.txtBold,layoutStyles.title]}>预告花絮</Text>
+              {videoNode}
+
+              <Text style={[layoutStyles.txtBold, layoutStyles.title]}>短评</Text>
+              <CommentList data={popular_comments} />
+              {this.getBottom()}
             </View>
+          </ScrollView>
+        </View>
+      )
+    }
 
-            <Text style={[layoutStyles.txtBold,layoutStyles.title]}>演职人员</Text>
-            {actorImgNode}
-
-            <Text style={[layoutStyles.txtBold,layoutStyles.title]}>预告花絮</Text>
-            {videoNode}
-
-            <Text style={[layoutStyles.txtBold, layoutStyles.title]}>短评</Text>
-            <CommentList data={popular_comments} />
-            {this.getBottom()}
-          </View>
-        </ScrollView>
-      </View>
-    )
-
+      return (
+        <View>
+        </View>
+      )
   }
+
+
 }
 
 export default Detail;
