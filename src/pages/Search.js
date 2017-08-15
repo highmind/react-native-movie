@@ -5,7 +5,7 @@ import {Toast} from 'antd-mobile';
 import {debounce} from 'lodash';
 import * as utils from '../utils';
 import {layoutStyles} from '../styles/layout';
-import {Button, ListItem, SearchList} from '../components/';
+import {Button, ListItem, SearchList, SearchTextList} from '../components/';
 
 import Storage from 'react-native-storage';
 import {AsyncStorage} from 'react-native';
@@ -91,6 +91,12 @@ class Search extends Component {
     })
   }
 
+  setSearchText = (text) => {
+    this.setState({
+      searchTxt : text
+    })
+  }
+
   render() {
     let {searchTxt, searchTxtList} = this.state;
     let nodes = searchTxtList.map((dData, index) => {
@@ -117,27 +123,30 @@ class Search extends Component {
       <View style={styles.container}>
         <View style={[layoutStyles.flexRow, styles.searchTop]}>
           <View style={layoutStyles.flex6}>
-            <TextInput style={styles.searchInput} placeholder="请输入搜索内容" underlineColorAndroid="transparent" onEndEditing={() => {
+            <TextInput style={styles.searchInput}
+              placeholder="请输入搜索内容"
+              underlineColorAndroid="transparent"
+              onEndEditing={() => {
               console.log('编辑结束');
               this.saveSearchTxt();
-            }} onChangeText={(text) => {
+            }}
+            onChangeText={(text) => {
               this.setState({searchTxt: text});
-            }} value={this.state.searchTxt}/>
+            }}
+            value={this.state.searchTxt}/>
           </View>
 
-          <TouchableOpacity style={[layoutStyles.flex1, styles.searchGoBack]} onPress={() => {
-            goBack();
-          }}>
-            <Text style={{
-              color: '#f2554f'
-            }}>取消</Text>
+          <TouchableOpacity
+            style={[layoutStyles.flex1, styles.searchGoBack]}
+            onPress={() => {goBack();}}>
+            <Text style={{color: '#f2554f'}}>取消</Text>
           </TouchableOpacity>
 
         </View>
 
         <View style={textListStyle}>
           <Text>搜索列表</Text>
-          {nodes}
+          <SearchTextList onPress={this.setSearchText} data={this.state.searchTxtList} />
         </View>
 
         <View style={searchListStyle}>

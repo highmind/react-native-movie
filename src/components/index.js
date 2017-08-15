@@ -4,3 +4,4 @@ export { default as List} from './List.js';
 export { default as Comment} from './Comment.js';
 export { default as CommentList} from './CommentList.js';
 export { default as SearchList} from './SearchList.js';
+export { default as SearchTextList} from './SearchTextList.js';
