@@ -112,7 +112,7 @@ class Search extends Component {
         width: 0,
         height: 0
       }
-      : null;
+      : {flex:1};
     // 搜索词不为空的时候， 显示 搜索词列表
     let textListStyle = searchTxt == ''
       ? null
@@ -134,7 +134,7 @@ class Search extends Component {
         <View style={[layoutStyles.flexRow, styles.searchTop]}>
           <View style={layoutStyles.flex6}>
             <TextInput style={styles.searchInput}
-              placeholder="请输入搜索内容"
+              placeholder="找影视剧"
               underlineColorAndroid="transparent"
               onEndEditing={() => {
               console.log('编辑结束');
