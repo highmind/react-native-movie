@@ -93,9 +93,6 @@ class SearchList extends Component {
             return;
           }
           console.log(resTxt);
-          if(this.props.text == ''){
-            return;
-          }
           this.setState({
             loading : false,
             filmListData :resTxt.subjects,
@@ -233,7 +230,7 @@ class SearchList extends Component {
              ItemSeparatorComponent={this._separator}
              ListEmptyComponent={
                <View style={{alignItems:'center',marginTop:30}}>
-                 <Text>暂无搜索结果</Text>
+                 <Text></Text>
                </View>
              }
              renderItem={

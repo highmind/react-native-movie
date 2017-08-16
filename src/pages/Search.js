@@ -1,23 +1,21 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
-
 import {Toast} from 'antd-mobile';
 import {debounce} from 'lodash';
 import * as utils from '../utils';
 import {layoutStyles} from '../styles/layout';
 import {Button, ListItem, SearchList, SearchTextList} from '../components/';
-
 import Storage from 'react-native-storage';
 import {AsyncStorage} from 'react-native';
 
 const storage = new Storage({
   size: 1000,
   storageBackend: AsyncStorage,
-
   defaultExpires: 1000 * 3600 * 24,
-  // 读写时在内存中缓存数据。默认启用。
   enableCache: true
 });
+
+global.storage = storage;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,54 +68,67 @@ class Search extends Component {
 
   saveSearchTxt = () => {  // 点击 键盘完成按钮时，提取搜索词 存入本地缓存
     let {searchTxt, searchTxtList} = this.state;
-    console.log(searchTxt)
-    searchTxtList.push(searchTxt)
+    if(utils.trim(searchTxt) == ''){ // 如果搜索词为空，则终止
+      return;
+    }
+    searchTxtList.unshift(searchTxt); // 将搜索词添加到数组头部
+
     storage.save({
       key: 'searchTxtList', // 注意:请不要在key中使用_下划线符号!
       data: {
         content: searchTxtList
       },
-      expires: null
+      expires: null, //永不过期
     });
   }
 
-  getSearchTxtList = () => { // 组件didMount时，加载本地缓存搜索词列表，并设置
-    storage.load({key: 'searchTxtList'}).then(ret => {
-      console.log('...getSearchTxtList')
-      console.log(ret)
-      this.setState({searchTxtList: ret.content});
+  getSearchTxtList = () => { // 组件didMount时，加载本地缓存搜索词列表，并设置state
+    storage.load({
+      key: 'searchTxtList'
+    }).then((ret) => {
+      this.setState({
+        searchTxtList: ret.content
+      });
     }).catch(err => {
-      console.warn(err.message);
+      //console.warn(err.message);
     })
   }
 
-  setSearchText = (text) => {
+  clearSearchTxtList = () => {  // 清除本地缓存的搜索词，并设置state，使UI刷新
+    storage.remove({
+      key: 'searchTxtList'
+    });
     this.setState({
-      searchTxt : text
+      searchTxtList : []
     })
   }
+
 
   render() {
     let {searchTxt, searchTxtList} = this.state;
-    let nodes = searchTxtList.map((dData, index) => {
-      return (
-        <Text key={index}>{dData}</Text>
-      )
-    });
     // 搜索词为空的时候，隐藏搜索结果列表
-    // 搜索词不为空的时候， 显示 搜索词列表
     let searchListStyle = searchTxt == ''
       ? {
         width: 0,
         height: 0
       }
       : null;
+    // 搜索词不为空的时候， 显示 搜索词列表
     let textListStyle = searchTxt == ''
       ? null
       : {
         width: 0,
         height: 0
       };
+    //本地缓存中列表为空，隐藏搜索词列表
+    let textListStyle2 = searchTxtList.length == 0
+      ? {
+        width: 0,
+        height: 0
+      }
+      : null;
+
+
     const {navigate, goBack} = this.props.navigation;
     return (
       <View style={styles.container}>
@@ -144,9 +155,16 @@ class Search extends Component {
 
         </View>
 
-        <View style={textListStyle}>
-          <Text>搜索列表</Text>
-          <SearchTextList onPress={this.setSearchText} data={this.state.searchTxtList} />
+        <View style={[textListStyle, textListStyle2]}>
+          <Text style={{marginLeft:20,fontWeight:'bold',marginVertical:10}}>搜索列表</Text>
+          <SearchTextList
+            clear={this.clearSearchTxtList}
+            onPress={(text) => {
+              this.setState({
+                searchTxt : text
+              })
+            }}
+            data={searchTxtList.slice(0, 6)} />
         </View>
 
         <View style={searchListStyle}>
