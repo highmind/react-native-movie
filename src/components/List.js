@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 });
 
 
-class List extends Component {
+class List extends React.PureComponent {
 
   constructor(props){
     super(props);
