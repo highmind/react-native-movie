@@ -128,7 +128,6 @@ class Search extends Component {
       }
       : null;
 
-
     const {navigate, goBack} = this.props.navigation;
     return (
       <View style={styles.container}>
