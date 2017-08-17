@@ -134,6 +134,7 @@ class Search extends Component {
         <View style={[layoutStyles.flexRow, styles.searchTop]}>
           <View style={layoutStyles.flex6}>
             <TextInput style={styles.searchInput}
+              autoFocus={true}
               placeholder="找影视剧"
               underlineColorAndroid="transparent"
               onEndEditing={() => {
@@ -155,7 +156,7 @@ class Search extends Component {
         </View>
 
         <View style={[textListStyle, textListStyle2]}>
-          <Text style={{marginLeft:20,fontWeight:'bold',marginVertical:10}}>搜索列表</Text>
+          <Text style={{marginLeft:20,fontSize:16,marginVertical:10}}>最近搜索</Text>
           <SearchTextList
             clear={this.clearSearchTxtList}
             onPress={(text) => {

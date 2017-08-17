@@ -6,9 +6,16 @@ import {Icon} from 'antd-mobile';
 
 const styles = StyleSheet.create({
   textItem: {
-    paddingVertical:6,
+    paddingVertical:8,
     marginHorizontal:20,
     alignItems:'center',
+    borderBottomWidth:1,
+    borderBottomColor:'#f6f6f6'
+  },
+  clearSection: {
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:12
   }
 });
 
@@ -31,12 +38,12 @@ class SearchTextList extends React.PureComponent {
     return (
       <View>
         {nodes}
-        <TouchableOpacity style={[layoutStyles.flexRow,{justifyContent:'center',alignItems:'center'}]}
+        <TouchableOpacity style={[layoutStyles.flexRow, styles.clearSection]}
           onPress={() => {
             clear();
           }} activeOpacity={0.8}>
           <Icon type={'\ue69F'} size={14} color="#aaa" />
-          <Text>清除所有搜索记录</Text>
+          <Text style={{fontSize:12}}> 清除所有搜索记录</Text>
         </TouchableOpacity>
       </View>
     )
