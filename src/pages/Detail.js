@@ -119,14 +119,20 @@ class Detail extends Component{
             imgData = {uri:dData.avatars.medium};
           }
 
+
           return(
               <View style={{padding:6,width:110}} key={index}>
-                <TouchableOpacity activeOpacity={0.8} onPress={()=>{
-                    navigate('Celebrity', { id:dData.id, title: dData.name});
+                {<TouchableOpacity activeOpacity={0.8} onPress={()=>{
+                    if(dData.id != null){
+                      navigate('Celebrity', { id:dData.id, title: dData.name});
+                    }else{
+                      Toast.info('暂无数据', 1)
+                    }
+
                   }}>
                   <Image resizeMode="contain" source={imgData} style={{width:100, height: 139}} />
                   <Text numberOfLines={1} style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>{dData.name}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
               </View>
           )
        });
