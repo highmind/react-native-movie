@@ -16,6 +16,14 @@ export let getGenres = (data) => {
   return data.join('/');
 }
 
+export let getBorn = (data) => {
+  if(data == ''){
+    return '不详'
+  }else{
+    return data.split(',').join(' ');
+  }
+}
+
 export let getScore = (data) => {
   return data==0 ? '暂无评分' : `${data}分`;
 }

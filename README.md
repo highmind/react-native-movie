@@ -50,6 +50,14 @@
     * 需要使用lodash.debounce
     * 节流控制
     * 请求时序控制
+  3. ImageBackground使用本地图片高度无法自适应问题
+    * 加上没有宽度和颜色的边框
+    ``` javascript
+     <ImageBackground
+     style={{borderWidth:0,borderColor:'rgba(0,0,0,0)'}}
+     source={require('../assets/celbg.png')}>
+     </ImageBackground>
+     ```
 ### 路由和界面切换
   1. 使用react-navigation
     * StackNavigator 堆栈式
