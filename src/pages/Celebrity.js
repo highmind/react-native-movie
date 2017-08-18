@@ -34,6 +34,7 @@ class Celebrity extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading : false,
       data : [],
       isOpen : false,
       viewRef: null
@@ -43,6 +44,7 @@ class Celebrity extends Component {
   static navigationOptions = ({navigation}) => ({title: navigation.state.params.title});
 
   componentDidMount() {
+    this.setState({loading : true})
     Toast.loading('Loading...', 0);
     let {params} = this.props.navigation.state;
     let url = `http://api.douban.com/v2/movie/celebrity/${params.id}?apikey=0b2bdeda43b5688921839c8ecb20399b&city=%E5%8C%97%E4%BA%AC`;
@@ -103,70 +105,78 @@ class Celebrity extends Component {
 
 
   render() {
-    let {
-      avatars={},
-      name,
-      name_en,
-      birthday,
-      gender,
-      constellation,
-      summary,
-      listNode,
-      bornNode,
-      tagNode,
-      photoNode
-    } = this.state.data;
-    let summaryStyle = this.state.isOpen ? null : 4;
-    let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
-    <Icon type="down" size="md" color="black" />;
-    return (
-      <View style={styles.container}>
-        <ScrollView>
+    let {loading} = this.state;
+    if(!loading){
+      let {
+        avatars={},
+        name,
+        name_en,
+        birthday,
+        gender,
+        constellation,
+        summary,
+        listNode,
+        bornNode,
+        tagNode,
+        photoNode
+      } = this.state.data;
+      let summaryStyle = this.state.isOpen ? null : 4;
+      let IconNode = this.state.isOpen ? <Icon type="up" size="md" color="black" /> :
+      <Icon type="down" size="md" color="black" />;
+      return (
+        <View style={styles.container}>
+          <ScrollView>
 
-            <ImageBackground style={{borderWidth:0,borderColor:'rgba(0,0,0,0)'}} source={require('../assets/celbg.png')}>
+              <ImageBackground style={{borderWidth:0,borderColor:'rgba(0,0,0,0)'}} source={require('../assets/celbg.png')}>
 
-              <View style={[layoutStyles.flexRow, styles.head]}>
+                <View style={[layoutStyles.flexRow, styles.head]}>
 
-                <View style={[layoutStyles.flex1]}>
-                    <Image
-                      resizeMode="contain"
-                      source={{uri:avatars.large}}
-                      style={{width:120, height: 166}} />
+                  <View style={[layoutStyles.flex1]}>
+                      <Image
+                        resizeMode="contain"
+                        source={{uri:avatars.medium}}
+                        style={{width:120, height: 166}} />
+                  </View>
+
+                  <View style={[layoutStyles.flexColumn, layoutStyles.flex2, {paddingBottom:10,justifyContent:'flex-end'}]}>
+                      <Text style={{color:'#fff'}}>
+                        <Text>{name} </Text>
+                        <Text>{name_en}</Text>
+                      </Text>
+
+                      <View style={[layoutStyles.flexRow, {marginTop:10, flexWrap:'wrap'}]}>
+                        {tagNode}
+                      </View>
+
+                  </View>
                 </View>
 
-                <View style={[layoutStyles.flexColumn, layoutStyles.flex2, {paddingBottom:10,justifyContent:'flex-end'}]}>
-                    <Text style={{color:'#fff'}}>
-                      <Text>{name} </Text>
-                      <Text>{name_en}</Text>
-                    </Text>
+              </ImageBackground>
 
-                    <View style={[layoutStyles.flexRow, {marginTop:10, flexWrap:'wrap'}]}>
-                      {tagNode}
-                    </View>
+              <View style={styles.main}>
+                <Text>
+                  <Text>出生地: {bornNode}{'\n'}</Text>
+                  <Text>生日: {birthday =='' ? '不详': birthday}{'\n'}</Text>
+                  <Text>星座: {constellation =='' ? '不详': constellation}{'\n'}</Text>
+                </Text>
 
-                </View>
+                <TouchableOpacity activeOpacity={0.8}  onPress={this.changeSummary}>
+                  <Text style={{lineHeight:24}} numberOfLines={summaryStyle}>简介 {summary == '' ? '暂无' : summary}</Text>
+                  <View style={{alignItems: 'center'}}>
+                      {IconNode}
+                  </View>
+                </TouchableOpacity>
               </View>
 
-            </ImageBackground>
+          </ScrollView>
 
-            <View style={styles.main}>
-              <Text>
-                <Text>出生地: {bornNode}{'\n'}</Text>
-                <Text>生日: {birthday =='' ? '不详': birthday}{'\n'}</Text>
-                <Text>星座: {constellation =='' ? '不详': constellation}{'\n'}</Text>
-              </Text>
+        </View>
+      )
 
-              <TouchableOpacity activeOpacity={0.8}  onPress={this.changeSummary}>
-                <Text style={{lineHeight:24}} numberOfLines={summaryStyle}>简介 {summary == '' ? '暂无' : summary}</Text>
-                <View style={{alignItems: 'center'}}>
-                    {IconNode}
-                </View>
-              </TouchableOpacity>
-            </View>
+  }
 
-        </ScrollView>
-
-      </View>
+    return (
+      <View></View>
     )
   }
 }
