@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, ImageBackground, TouchableOpacity, Image, ScrollView} from 'react-native';
 import {Toast, Icon} from 'antd-mobile';
-import {Tag} from '../components/';
+import {Tag, Button} from '../components/';
 import * as utils from '../utils';
 import {layoutStyles} from '../styles/layout';
 const styles = StyleSheet.create({
@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
     paddingBottom:10,
     paddingRight:16,
   },
+  txtBlack:{
+    color:"#000"
+  }
 
 });
 
@@ -79,17 +82,46 @@ class Celebrity extends Component {
 
   getList = (data) => {
     let nodes = <Text>暂无数据</Text>;
+    let {navigate} = this.props.navigation;
     if(data.length != 0){
       nodes = data.map((dData, index) => {
-        let {mainland_pubdate:pubdate, year} = dData.subject;
+        let {pubdates, title, id, genres} = dData.subject;
         return(
-          <Text key={index}>{pubdate}</Text>
+          <TouchableOpacity activeOpacity={0.8}  onPress={()=> {
+           navigate('Detail', { id: id, title: title });}}
+            key={index} style={[layoutStyles.flexRow,
+              {marginTop:10,borderBottomWidth:1,paddingBottom:10,
+                borderBottomColor:'#E6E6E6'}]}>
+
+            <View style={layoutStyles.flex1}>
+              <Image
+                resizeMode="contain"
+                source={{uri:dData.subject.images.medium}}
+                style={{width:87, height: 120}} />
+            </View>
+
+            <View style={layoutStyles.flex2}>
+              <Text style={styles.txtBlack}>{title}</Text>
+              <Text>{dData.roles}</Text>
+              <Text>{utils.getGenres(genres)}</Text>
+              <Text>{utils.getPubDate(pubdates)}</Text>
+            </View>
+
+            <View style={[layoutStyles.flex1,{alignItems:'flex-end'}]}>
+              <Button style={{width:60}} onPress={()=> {
+               navigate('Detail', { id: id, title: title });}}
+               title="更多" color="#EF4238" />
+            </View>
+
+          </TouchableOpacity>
+
         );
       });
     }
 
     return(
-      <View>
+      <View style={{marginTop:10}}>
+        <Text style={styles.txtBlack}>参演作品</Text>
         {nodes}
       </View>
     )
@@ -166,6 +198,7 @@ class Celebrity extends Component {
                       {IconNode}
                   </View>
                 </TouchableOpacity>
+                {listNode}
               </View>
 
           </ScrollView>
