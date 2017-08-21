@@ -70,7 +70,8 @@
    ``` javascript
    ./gradlew assembleRelease
    ```
-
+### 视频播放
+  * react-native-video
 
 ### 实现功能
   1. 即将上映

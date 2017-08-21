@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 
 import {StackNavigator} from 'react-navigation';  //路由导航
-import {Detail, Celebrity, Video, FilmList, Review, Search} from '../pages';
+import {Detail, Celebrity, Trailer, FilmList, Review, Search} from '../pages';
 import {Provider} from 'react-redux';
 import configureStore from '../store/store';
 const store = configureStore();
@@ -11,7 +11,7 @@ const Route = StackNavigator({
   Home: {screen: FilmList},
   Detail: {screen: Detail},
   Celebrity:{screen:Celebrity},
-  Video:{screen:Video},
+  Trailer:{screen:Trailer},
   Review:{screen:Review},
   Search:{screen:Search}
 },{

@@ -65,6 +65,7 @@ class Detail extends Component{
       data: [],
       isOpen : false,
       loading : false,
+      videoData:[], //视频数据 用于传给 视频界面
     }
   }
   //设置 顶栏标题
@@ -86,7 +87,11 @@ class Detail extends Component{
     .then((resTxt) => {
       Toast.hide();
       console.log(resTxt);
+
+      let {trailers, bloopers, clips } = resTxt;//处理视频数据 用于传给 视频节目
+      let videoData = [...trailers, ...bloopers, ...clips];
       this.setState({
+        videoData : videoData,
         title:resTxt.title,
         data:resTxt,
         loading:false
@@ -152,6 +157,7 @@ class Detail extends Component{
     getVideo(data){
       console.log('...getActorImg...');
       let {navigate} = this.props.navigation;
+      let {videoData} = this.state;
       let nodes = <Text>暂无数据</Text>;
       if(data.length != 0){
         nodes = data.map((dData, index) => {
@@ -163,11 +169,26 @@ class Detail extends Component{
 
           return(
               <View style={{marginLeft:6,width:180}} key={index}>
-                <TouchableOpacity activeOpacity={0.8} onPress={()=>{
-                    navigate('Video', { id: dData.id, title: dData.title});
+
+                <TouchableOpacity activeOpacity={0.8}
+                  onPress={()=>{
+                    navigate('Trailer', {
+                      id: dData.id,
+                      title: dData.title,
+                       videoData:videoData
+                    });
                   }}>
-                  <Image resizeMode="contain" source={imgData} style={{width:180, height: 101}} />
-                  <Text numberOfLines={1} style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>{dData.title}</Text>
+
+                  <Image
+                    resizeMode="contain"
+                    source={imgData}
+                    style={{width:180, height: 101}} />
+
+                  <Text numberOfLines={1}
+                    style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>
+                    {dData.title}
+                  </Text>
+
                 </TouchableOpacity>
               </View>
           )
@@ -178,7 +199,7 @@ class Detail extends Component{
               <ScrollView horizontal={true}
                 showsHorizontalScrollIndicator={false}>
                   {nodes}
-                </ScrollView>
+              </ScrollView>
             </View>
 
             )
