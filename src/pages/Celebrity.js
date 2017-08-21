@@ -127,7 +127,7 @@ class Celebrity extends Component {
         <View style={styles.container}>
           <ScrollView>
 
-              <ImageBackground style={{borderWidth:0,borderColor:'rgba(0,0,0,0)'}} source={require('../assets/celbg.png')}>
+              <ImageBackground style={{width:'auto'}} source={require('../assets/celbg.png')}>
 
                 <View style={[layoutStyles.flexRow, styles.head]}>
 

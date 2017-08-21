@@ -231,7 +231,7 @@ class Detail extends Component{
       return (
         <View style={styles.container}>
         <ScrollView>
-          <ImageBackground source={{uri:images.medium}}>
+          <ImageBackground style={{width:'auto'}} source={{uri:images.medium}}>
             <View style={[layoutStyles.flexRow, styles.head]}>
 
               <View style={layoutStyles.flex1}>
