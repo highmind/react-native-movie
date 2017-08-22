@@ -3,10 +3,13 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  Slider
 } from 'react-native';
 
 import Video from 'react-native-video';
+import {layoutStyles} from '../styles/layout';
+import { Icon } from 'antd-mobile';
 
 let styles = StyleSheet.create({
   container: {
@@ -119,12 +122,16 @@ class Trailer extends Component {
 
     // 开始加载的回调函数
     loadStart = () => {
-
+      console.log('loadStart')
     }
 
     // 视频载入时回调， 设置 总时长
     onLoad = (data) => {
-      this.setState({ duration: data.duration });
+      console.log('onLoad'); //加载完成 开始自动播放
+      this.setState({
+        paused: false,
+        duration: data.duration
+      });
     };
 
     // 每250毫秒进行一次回调， 设置当前时间
@@ -195,7 +202,45 @@ class Trailer extends Component {
     render(){
       const flexCompleted = this.getCurrentTimePercentage() * 100; //进度条已完成多少
       const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100; // 进度条剩余多少
+      console.log(flexCompleted)
       let {nowVideo} = this.state;
+      let controlBtn = this.state.paused
+      ? <Icon type={'\ue604'} size="md" color="#fff" />
+      : <Icon type={'\ue63D'} size="md" color="#fff" />;
+      // <TouchableOpacity style={{marginTop:50}} onPrsss={()=>{this.video.presentFullscreenPlayer()}}>
+      //   <Text style={{color:'#fff'}}>全屏</Text>
+      // </TouchableOpacity>
+      // <View style={styles.trackingControls}>
+      //   <View style={styles.progress}>
+      //     <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
+      //     <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
+      //   </View>
+      // </View>
+      //
+      //   <View style={styles.generalControls}>
+      //     <View style={styles.rateControl}>
+      //       <Text>速率</Text>
+      //       {this.renderRateControl(0.25)}
+      //       {this.renderRateControl(0.5)}
+      //       {this.renderRateControl(1.0)}
+      //       {this.renderRateControl(1.5)}
+      //       {this.renderRateControl(2.0)}
+      //     </View>
+      //
+      //     <View style={styles.volumeControl}>
+      //       <Text>音量</Text>
+      //       {this.renderVolumeControl(0.5)}
+      //       {this.renderVolumeControl(1)}
+      //       {this.renderVolumeControl(1.5)}
+      //     </View>
+      //
+      //     <View style={styles.resizeModeControl}>
+      //       <Text>缩放</Text>
+      //       {this.renderResizeModeControl('cover')}
+      //       {this.renderResizeModeControl('contain')}
+      //       {this.renderResizeModeControl('stretch')}
+      //     </View>
+      //   </View>
       return (
         <View style={styles.container}>
            <TouchableOpacity
@@ -222,42 +267,38 @@ class Trailer extends Component {
            </TouchableOpacity>
 
            <View style={styles.controls}>
-             <View style={styles.generalControls}>
-               <View style={styles.rateControl}>
-                 <Text>速率</Text>
-                 {this.renderRateControl(0.25)}
-                 {this.renderRateControl(0.5)}
-                 {this.renderRateControl(1.0)}
-                 {this.renderRateControl(1.5)}
-                 {this.renderRateControl(2.0)}
-               </View>
-
-               <View style={styles.volumeControl}>
-                 <Text>音量</Text>
-                 {this.renderVolumeControl(0.5)}
-                 {this.renderVolumeControl(1)}
-                 {this.renderVolumeControl(1.5)}
-               </View>
-
-               <View style={styles.resizeModeControl}>
-                 <Text>缩放</Text>
-                 {this.renderResizeModeControl('cover')}
-                 {this.renderResizeModeControl('contain')}
-                 {this.renderResizeModeControl('stretch')}
-               </View>
+             <View style={layoutStyles.flexRow}>
+                <TouchableOpacity
+                  onPress={() => {
+                    let {paused} = this.state;
+                    this.setState({ paused: !paused})
+                }}>
+                  {controlBtn}
+                </TouchableOpacity>
+               <Slider
+                 style={{flex:1,}}
+                 maximumTrackTintColor="#fff"
+                 minimumTrackTintColor="#ddd"
+                 thumbTintColor="#fff"
+                 maximumValue={100}
+                 minimumValue={0}
+                 step={1}
+                 value={flexCompleted}
+                 onSlidingComplete={ (value) => {console.log(value)} }
+                 />
+               <TouchableOpacity
+                 onPress={() => {
+                   console.log(this.video);
+                  //  this.video.presentFullscreenPlayer()
+                  // console.log(this.refs)
+               }}>
+                  <Icon type={'\ue615'} size="md" color="#fff" />
+               </TouchableOpacity>
              </View>
 
-             <View style={styles.trackingControls}>
-               <View style={styles.progress}>
-                 <View style={[styles.innerProgressCompleted, { flex: flexCompleted }]} />
-                 <View style={[styles.innerProgressRemaining, { flex: flexRemaining }]} />
-               </View>
-             </View>
            </View>
 
-          <TouchableOpacity style={{marginTop:50}} onPrsss={()=>{this.video.presentFullscreenPlayer()}}>
-            <Text style={{color:'#fff'}}>全屏</Text>
-          </TouchableOpacity>
+
 
          </View>
         )

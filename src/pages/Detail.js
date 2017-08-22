@@ -54,6 +54,19 @@ const styles = StyleSheet.create({
     height:30,
     textAlign:'center',
     lineHeight:30,
+  },
+  videoImg : {
+    position:'relative',
+    alignItems:'center',
+
+  },
+  videoBtn : {
+    position:'absolute',
+    top:26,
+    width:50,
+    height:50,
+    alignItems:'center',
+    justifyContent:'center'
   }
 });
 
@@ -170,7 +183,7 @@ class Detail extends Component{
           return(
               <View style={{marginLeft:6,width:180}} key={index}>
 
-                <TouchableOpacity activeOpacity={0.8}
+                <TouchableOpacity style={styles.videoImg} activeOpacity={0.8}
                   onPress={()=>{
                     navigate('Trailer', {
                       id: dData.id,
@@ -188,6 +201,11 @@ class Detail extends Component{
                     style={[layoutStyles.txtCenter,layoutStyles.paragraph]}>
                     {dData.title}
                   </Text>
+
+                  <View style={styles.videoBtn}>
+                    <Icon type={'\ue6D0'} size={26} color="#fff" />
+                  </View>
+
 
                 </TouchableOpacity>
               </View>
