@@ -288,9 +288,7 @@ class Trailer extends Component {
                  />
                <TouchableOpacity
                  onPress={() => {
-                   console.log(this.video);
-                  //  this.video.presentFullscreenPlayer()
-                  // console.log(this.refs)
+                   this.video.presentFullscreenPlayer()
                }}>
                   <Icon type={'\ue615'} size="md" color="#fff" />
                </TouchableOpacity>

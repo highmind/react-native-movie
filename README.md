@@ -72,6 +72,7 @@
    ```
 ### 视频播放
   * react-native-video
+  * Slider 实现进度条
 
 ### 实现功能
   1. 即将上映
