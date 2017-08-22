@@ -79,7 +79,7 @@ class Trailer extends Component {
     constructor(props){
         super(props);
         this.state = {
-          rate: 1,
+           rate: 1,
            volume: 1,
            muted: false,
            resizeMode: 'contain',
@@ -117,14 +117,22 @@ class Trailer extends Component {
       return nowVideo;
     }
 
+    // 开始加载的回调函数
+    loadStart = () => {
+
+    }
+
+    // 视频载入时回调， 设置 总时长
     onLoad = (data) => {
       this.setState({ duration: data.duration });
     };
 
+    // 每250毫秒进行一次回调， 设置当前时间
     onProgress = (data) => {
       this.setState({ currentTime: data.currentTime });
     };
 
+    // 视频播放完成以后， 设置pasued为true, 视频跳转到 0即 开始位置
     onEnd = () => {
       this.setState({ paused: true })
       this.video.seek(0)
@@ -138,6 +146,7 @@ class Trailer extends Component {
       this.setState({ paused: !event.hasAudioFocus })
     };
 
+    // 获取当前时长的百分比
     getCurrentTimePercentage() {
       if (this.state.currentTime > 0) {
         return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
@@ -145,6 +154,7 @@ class Trailer extends Component {
       return 0;
     };
 
+    // 渲染  速率控制区
     renderRateControl(rate) {
       const isSelected = (this.state.rate === rate);
 
@@ -157,6 +167,7 @@ class Trailer extends Component {
       );
     }
 
+    //渲染 缩放模式控制区
     renderResizeModeControl(resizeMode) {
       const isSelected = (this.state.resizeMode === resizeMode);
       return (
@@ -168,6 +179,7 @@ class Trailer extends Component {
       )
     }
 
+    //渲染 音量控制
     renderVolumeControl(volume) {
       const isSelected = (this.state.volume === volume);
 
@@ -181,8 +193,8 @@ class Trailer extends Component {
     }
 
     render(){
-      const flexCompleted = this.getCurrentTimePercentage() * 100;
-      const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
+      const flexCompleted = this.getCurrentTimePercentage() * 100; //进度条已完成多少
+      const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100; // 进度条剩余多少
       let {nowVideo} = this.state;
       return (
         <View style={styles.container}>
@@ -192,8 +204,6 @@ class Trailer extends Component {
            >
              <Video
                ref={(ref: Video) => { this.video = ref }}
-               /* For ExoPlayer */
-               /* source={{ uri: 'http://www.youtube.com/api/manifest/dash/id/bf5bb2419360daf1/source/youtube?as=fmp4_audio_clear,fmp4_sd_hd_clear&sparams=ip,ipbits,expire,source,id,as&ip=0.0.0.0&ipbits=0&expire=19000000000&signature=51AF5F39AB0CEC3E5497CD9C900EBFEAECCCB5C7.8506521BFC350652163895D4C26DEE124209AA9E&key=ik0', type: 'mpd' }} */
                source={{uri:nowVideo.resource_url}}
                style={styles.fullScreen}
                rate={this.state.rate}
@@ -201,6 +211,7 @@ class Trailer extends Component {
                volume={this.state.volume}
                muted={this.state.muted}
                resizeMode={this.state.resizeMode}
+               onLoadStart={this.loadStart}
                onLoad={this.onLoad}
                onProgress={this.onProgress}
                onEnd={this.onEnd}
@@ -213,6 +224,7 @@ class Trailer extends Component {
            <View style={styles.controls}>
              <View style={styles.generalControls}>
                <View style={styles.rateControl}>
+                 <Text>速率</Text>
                  {this.renderRateControl(0.25)}
                  {this.renderRateControl(0.5)}
                  {this.renderRateControl(1.0)}
@@ -221,12 +233,14 @@ class Trailer extends Component {
                </View>
 
                <View style={styles.volumeControl}>
+                 <Text>音量</Text>
                  {this.renderVolumeControl(0.5)}
                  {this.renderVolumeControl(1)}
                  {this.renderVolumeControl(1.5)}
                </View>
 
                <View style={styles.resizeModeControl}>
+                 <Text>缩放</Text>
                  {this.renderResizeModeControl('cover')}
                  {this.renderResizeModeControl('contain')}
                  {this.renderResizeModeControl('stretch')}
@@ -240,6 +254,11 @@ class Trailer extends Component {
                </View>
              </View>
            </View>
+
+          <TouchableOpacity style={{marginTop:50}} onPrsss={()=>{this.video.presentFullscreenPlayer()}}>
+            <Text style={{color:'#fff'}}>全屏</Text>
+          </TouchableOpacity>
+
          </View>
         )
     }
