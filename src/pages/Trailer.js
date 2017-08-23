@@ -59,6 +59,11 @@ let styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'red'
   },
+  goBackBtn:{
+    position:'absolute',
+    left:20,
+    top:20
+  },
   controls: {
     backgroundColor: 'transparent',
     borderRadius: 5,
@@ -135,7 +140,7 @@ class Trailer extends Component {
     }
 
     static navigationOptions = ({ navigation }) => ({
-      title: navigation.state.params.title,
+      header: null,
     });
 
     componentDidMount(){
@@ -303,6 +308,7 @@ class Trailer extends Component {
       let controlBtn = this.state.paused
       ? <Icon type={'\ue604'} size="md" color="#fff" />
       : <Icon type={'\ue63D'} size="md" color="#fff" />;
+      let {goBack} = this.props.navigation;
       // <TouchableOpacity style={{marginTop:50}} onPrsss={()=>{this.video.presentFullscreenPlayer()}}>
       //   <Text style={{color:'#fff'}}>全屏</Text>
       // </TouchableOpacity>
@@ -339,10 +345,7 @@ class Trailer extends Component {
       //   </View>
       return (
         <View style={styles.container}>
-           <TouchableOpacity
-             style={[styles.fullScreen, layoutStyles.flexRow]}
-             onPress={() => this.setState({ paused: !this.state.paused })}
-           >
+           <View style={[styles.fullScreen, layoutStyles.flexRow]}>
              <Video
                ref={(ref: Video) => { this.video = ref }}
                source={{uri:nowVideo.resource_url}}
@@ -378,7 +381,17 @@ class Trailer extends Component {
               color="white"
               size="large"
             />
-           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.goBackBtn}
+            activeOpacity={0.8}
+            onPress={() => {
+              goBack();
+            }}
+          >
+            <Icon type={'\ue620'} size="md" color="#fff" />
+          </TouchableOpacity>
+          </View>
 
            <View style={styles.controls}>
              <View style={[layoutStyles.flexRow,{paddingHorizontal:10}]}>
