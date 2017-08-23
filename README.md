@@ -58,6 +58,7 @@
      source={require('../assets/celbg.png')}>
      </ImageBackground>
      ```
+  4. 绝对定位元素 不加样式之前，无法实现 width 100%
 ### 路由和界面切换
   1. 使用react-navigation
     * StackNavigator 堆栈式

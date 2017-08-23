@@ -4,12 +4,14 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Slider
+  Slider,
+  Image,
+  ActivityIndicator
 } from 'react-native';
 
 import Video from 'react-native-video';
 import {layoutStyles} from '../styles/layout';
-import { Icon } from 'antd-mobile';
+import {Icon, Toast } from 'antd-mobile';
 
 let styles = StyleSheet.create({
   container: {
@@ -18,17 +20,33 @@ let styles = StyleSheet.create({
     // alignItems: 'center',
     backgroundColor: 'black',
   },
+  loading:{
+    position:'absolute',
+  },
+  postWrap:{
+    flex:1,
+    height:240
+  },
   fullScreen: {
     width:'auto',
     height:240,
+    position:'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden'
+  },
+  video: {
+    position:'absolute',
+    width:'auto',
+    height:240
   },
   controls: {
     backgroundColor: 'transparent',
     borderRadius: 5,
-    position: 'absolute',
-    top:242,
-    left: 20,
-    right: 20,
+    // position: 'absolute',
+    // top:242,
+    // left: 20,
+    // right: 20,
   },
   progress: {
     flex: 1,
@@ -122,13 +140,14 @@ class Trailer extends Component {
 
     // 开始加载的回调函数
     loadStart = () => {
-      console.log('loadStart')
+      console.log('loadStart');
     }
 
     // 视频载入时回调， 设置 总时长
     onLoad = (data) => {
       console.log('onLoad'); //加载完成 开始自动播放
       this.setState({
+        loading: false,
         paused: false,
         duration: data.duration
       });
@@ -152,6 +171,11 @@ class Trailer extends Component {
     onAudioFocusChanged = (event: { hasAudioFocus: boolean }) => {
       this.setState({ paused: !event.hasAudioFocus })
     };
+
+    // 视频错误
+    videoError = () => {
+      Toast.info('网络错误', 1);
+    }
 
     // 获取当前时长的百分比
     getCurrentTimePercentage() {
@@ -206,7 +230,6 @@ class Trailer extends Component {
     render(){
       const flexCompleted = this.getCurrentTimePercentage() * 100; //进度条已完成多少
       const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100; // 进度条剩余多少
-      console.log(flexCompleted)
       let {nowVideo} = this.state;
       let controlBtn = this.state.paused
       ? <Icon type={'\ue604'} size="md" color="#fff" />
@@ -248,13 +271,13 @@ class Trailer extends Component {
       return (
         <View style={styles.container}>
            <TouchableOpacity
-             style={styles.fullScreen}
+             style={[styles.fullScreen, layoutStyles.flexRow]}
              onPress={() => this.setState({ paused: !this.state.paused })}
            >
              <Video
                ref={(ref: Video) => { this.video = ref }}
                source={{uri:nowVideo.resource_url}}
-               style={styles.fullScreen}
+               style={styles.video}
                rate={this.state.rate}
                paused={this.state.paused}
                volume={this.state.volume}
@@ -267,7 +290,25 @@ class Trailer extends Component {
                onAudioBecomingNoisy={this.onAudioBecomingNoisy}
                onAudioFocusChanged={this.onAudioFocusChanged}
                repeat={false}
+               onError={this.videoError}
              />
+            {
+              this.state.loading &&
+              <View style={styles.postWrap}>
+                <Image
+                  resizeMode="cover"
+                  style={{width:'auto',height: 240}}
+                  source={{uri:nowVideo.medium}}
+                />
+              </View>
+            }
+
+            <ActivityIndicator
+              style={styles.loading}
+              animating={this.state.loading}
+              color="white"
+              size="large"
+            />
            </TouchableOpacity>
 
            <View style={styles.controls}>
@@ -276,7 +317,8 @@ class Trailer extends Component {
                   onPress={() => {
                     let {paused} = this.state;
                     this.setState({ paused: !paused})
-                }}>
+                  }}
+                >
                   {controlBtn}
                 </TouchableOpacity>
                <Slider
@@ -296,13 +338,13 @@ class Trailer extends Component {
                <TouchableOpacity
                  onPress={() => {
                    this.video.presentFullscreenPlayer()
-               }}>
+                 }}
+               >
                   <Icon type={'\ue615'} size="md" color="#fff" />
                </TouchableOpacity>
              </View>
 
            </View>
-
 
 
          </View>
