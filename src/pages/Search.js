@@ -39,6 +39,9 @@ const styles = StyleSheet.create({
     width: 60,
     alignItems: 'center',
     paddingVertical: 6
+  },
+  searchTitle: {
+    marginLeft:20, fontSize:16, marginVertical:10
   }
 });
 
@@ -133,18 +136,19 @@ class Search extends Component {
       <View style={styles.container}>
         <View style={[layoutStyles.flexRow, styles.searchTop]}>
           <View style={layoutStyles.flex6}>
-            <TextInput style={styles.searchInput}
+            <TextInput
+              style={styles.searchInput}
               autoFocus={true}
               placeholder="找影视剧"
               underlineColorAndroid="transparent"
               onEndEditing={() => {
-              console.log('编辑结束');
-              this.saveSearchTxt();
-            }}
-            onChangeText={(text) => {
-              this.setState({searchTxt: text});
-            }}
-            value={this.state.searchTxt}/>
+                console.log('编辑结束');
+                this.saveSearchTxt();
+              }}
+              onChangeText={(text) => {
+                this.setState({searchTxt: text});
+              }}
+              value={this.state.searchTxt} />
           </View>
 
           <TouchableOpacity
@@ -156,7 +160,7 @@ class Search extends Component {
         </View>
 
         <View style={[textListStyle, textListStyle2]}>
-          <Text style={{marginLeft:20,fontSize:16,marginVertical:10}}>最近搜索</Text>
+          <Text style={styles.searchTitle}>最近搜索</Text>
           <SearchTextList
             clear={this.clearSearchTxtList}
             onPress={(text) => {

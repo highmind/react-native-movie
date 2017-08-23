@@ -34,14 +34,16 @@ class Comment extends Component{
       <View style={styles.comment}>
         <View style={[styles.commentHead, layoutStyles.flexRow]}>
           <View style={layoutStyles.flex1}>
-            <Image source={{uri:author.avatar}}
-            style={styles.commentUserPhoto} />
+            <Image
+              source={{uri:author.avatar}}
+              style={styles.commentUserPhoto}
+             />
           </View>
-          <View style={[layoutStyles.flex5,{justifyContent: 'center'}]}>
+          <View style={[layoutStyles.flex5, {justifyContent: 'center'}]}>
             <Text>{author.name}</Text>
             <Text>{created_at}</Text>
           </View>
-          <View style={[layoutStyles.flex1,{justifyContent: 'center'}]}>
+          <View style={[layoutStyles.flex1, {justifyContent: 'center'}]}>
             <Text style={styles.commentScore}>{rating.value}分</Text>
           </View>
         </View>

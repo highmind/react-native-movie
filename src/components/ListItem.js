@@ -36,9 +36,11 @@ class ListItem extends Component {
         <View style={[layoutStyles.flexRow,styles.itemWrap]}>
 
          <View style={layoutStyles.flex2}>
-           <Image source={{uri:data.images.medium}}
+           <Image
+             source={{uri:data.images.medium}}
              style={{width:87, height: 120}}
-             resizeMode="contain" />
+             resizeMode="contain"
+            />
          </View>
 
          <View style={[layoutStyles.flex4,{paddingHorizontal:6}]}>
@@ -57,9 +59,16 @@ class ListItem extends Component {
              </Text>
            </View>
            <View style={{marginTop:30}}>
-             <Button style={{width:60}} onPress={()=> {
-              navigate('Detail', { id: data.id, title: data.title });}}
-              title="更多" color="#EF4238" />
+             <Button
+               style={{width:60}}
+               onPress={
+                 () => {
+                   navigate('Detail', { id: data.id, title: data.title });
+                }
+               }
+              title="更多"
+              color="#EF4238"
+            />
            </View>
 
          </View>

@@ -89,7 +89,7 @@ class List extends React.PureComponent {
           this.setState({
             refreshing : false,
             filmListData :resTxt.subjects,
-            filmListTotal: resTxt.total,
+            filmListTotal : resTxt.total,
             start : 0,
             page : 1
           })
@@ -160,9 +160,7 @@ class List extends React.PureComponent {
 
   _separator = () => {
     return (
-      <View style={
-            {marginHorizontal:10, height: 1, backgroundColor: '#E6E6E6' }
-          }></View>
+      <View style={{marginHorizontal:10, height: 1, backgroundColor: '#E6E6E6' }}></View>
     )
   }
 
@@ -177,7 +175,7 @@ class List extends React.PureComponent {
            onEndReachedThreshold={0.5}
            onRefresh={this.onRefresh}
            refreshing={this.state.refreshing}
-           getItemLayout={(item, index) => ({length: 150, offset: 150 * index, index})}
+           getItemLayout={(item, index) => ({length: 151, offset: 151 * index, index})}
            ListFooterComponent={this.getListBottom()}
            ItemSeparatorComponent={this._separator}
            renderItem={

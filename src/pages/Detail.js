@@ -183,12 +183,14 @@ class Detail extends Component{
           return(
               <View style={{marginLeft:6,width:180}} key={index}>
 
-                <TouchableOpacity style={styles.videoImg} activeOpacity={0.8}
+                <TouchableOpacity
+                  style={styles.videoImg}
+                  activeOpacity={0.8}
                   onPress={()=>{
                     navigate('Trailer', {
-                      id: dData.id,
-                      title: dData.title,
-                       videoData:videoData
+                      id : dData.id,
+                      title : dData.title,
+                      videoData : videoData
                     });
                   }}>
 
@@ -214,9 +216,11 @@ class Detail extends Component{
      }
       return(
             <View>
-              <ScrollView horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                  {nodes}
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+               >
+                {nodes}
               </ScrollView>
             </View>
 
@@ -274,7 +278,11 @@ class Detail extends Component{
             <View style={[layoutStyles.flexRow, styles.head]}>
 
               <View style={layoutStyles.flex1}>
-                  <Image resizeMode="contain" source={{uri:images.large}} style={{width:100, height: 139}} />
+                  <Image
+                    resizeMode="contain"
+                    source={{uri:images.large}}
+                    style={{width:100, height: 139}}
+                  />
               </View>
 
               <View style={[layoutStyles.flex3,{paddingHorizontal:50}]}>

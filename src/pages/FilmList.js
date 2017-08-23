@@ -37,10 +37,14 @@ const FilmList = TabNavigator({
       navigationOptions:({ navigation }) => ({
           title: '芝麻电影',
           headerRight:
-          <TouchableHighlight activeOpacity={0.6} underlayColor={'#d43d3d'} style={{padding:20}} onPress={()=>{
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor={'#d43d3d'}
+            style={{padding:20}}
+            onPress={()=>{
                 navigation.navigate('Search');
             }}>
-            <View style={{}}>
+            <View>
                 <Icon type={'\ue670'} size="md" color="#fff" />
             </View>
           </TouchableHighlight>,
@@ -59,7 +63,6 @@ const FilmList = TabNavigator({
           },
           style: {
               backgroundColor: '#fff', // TabBar 背景色
-
           },
           labelStyle: {
               fontSize: 16, // 文字大小

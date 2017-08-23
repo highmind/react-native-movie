@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
   },
   txtBlack:{
     color:"#000"
+  },
+  celItem:{
+    marginTop:10, borderBottomWidth:1, paddingBottom:10, borderBottomColor:'#E6E6E6'
   }
 
 });
@@ -90,7 +93,7 @@ class Celebrity extends Component {
           <TouchableOpacity activeOpacity={0.8}  onPress={()=> {
            navigate('Detail', { id: id, title: title });}}
             key={index}
-            style={[layoutStyles.flexRow,{marginTop:10,borderBottomWidth:1,paddingBottom:10,borderBottomColor:'#E6E6E6'}]}>
+            style={[layoutStyles.flexRow, styles.celItem]}>
 
             <View style={layoutStyles.flex1}>
               <Image

@@ -20,8 +20,10 @@ class Button extends Component{
   render(){
     let {color, title, style} = this.props;
     return (
-        <TouchableHighlight style={[styles.btn,{backgroundColor:color},style]}
-          onPress={this.props.onPress}>
+        <TouchableHighlight
+          style={[styles.btn, {backgroundColor:color}, style]}
+          onPress={this.props.onPress}
+        >
           <Text style={styles.btnText}>{title}</Text>
         </TouchableHighlight>
     )

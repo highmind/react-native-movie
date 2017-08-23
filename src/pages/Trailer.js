@@ -161,6 +161,10 @@ class Trailer extends Component {
       return 0;
     };
 
+    getCurrentTimeByNum = (num) => {
+      return this.state.duration * (num / 100)
+    }
+
     // 渲染  速率控制区
     renderRateControl(rate) {
       const isSelected = (this.state.rate === rate);
@@ -276,7 +280,7 @@ class Trailer extends Component {
                   {controlBtn}
                 </TouchableOpacity>
                <Slider
-                 style={{flex:1,}}
+                 style={layoutStyles.flex1}
                  maximumTrackTintColor="#fff"
                  minimumTrackTintColor="#ddd"
                  thumbTintColor="#fff"
@@ -284,7 +288,10 @@ class Trailer extends Component {
                  minimumValue={0}
                  step={1}
                  value={flexCompleted}
-                 onSlidingComplete={ (value) => {console.log(value)} }
+                 onSlidingComplete={ (value) => {
+                   let currentTime = this.getCurrentTimeByNum(value);
+                   this.setState({ currentTime : currentTime})
+                 }}
                  />
                <TouchableOpacity
                  onPress={() => {
