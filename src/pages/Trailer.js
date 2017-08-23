@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Slider,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native';
 
 import Video from 'react-native-video';
@@ -26,6 +27,10 @@ let styles = StyleSheet.create({
   postWrap:{
     flex:1,
     height:240
+  },
+  videoList: {
+    backgroundColor:'#fff',
+    paddingHorizontal:10
   },
   fullScreen: {
     width:'auto',
@@ -126,6 +131,51 @@ class Trailer extends Component {
           nowVideo : nowVideo,
           videoData : videoData
         })
+    }
+
+    getVideoList(data){
+      let nodes = data.map((dData, index) => {
+        return (
+          <TouchableOpacity
+            style={[layoutStyles.flexRow,{marginTop:10}]}
+            key={dData.id}
+            onPress={()=>{
+              this.setState({
+                paused : true,
+              });
+
+              let nowVideo = this.getNowVideo(this.state.videoData, dData.id);
+              this.video.seek(0);
+              this.setState({
+                loading : true,
+                paused : false,
+                nowVideo : nowVideo,
+              })
+
+            }}
+          >
+
+            <View style={layoutStyles.flex2}>
+              <Image
+                resizeMode="contain"
+                source={{uri:dData.medium}}
+                style={{width:140, height:100}}
+              />
+            </View>
+
+            <View style={layoutStyles.flex3}>
+              <Text>{dData.title}</Text>
+            </View>
+
+          </TouchableOpacity>
+        );
+      });
+
+      return(
+        <View style={styles.videoList}>
+          {nodes}
+        </View>
+      );
     }
 
     getNowVideo = (data, vId) => {
@@ -230,10 +280,11 @@ class Trailer extends Component {
     render(){
       const flexCompleted = this.getCurrentTimePercentage() * 100; //进度条已完成多少
       const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100; // 进度条剩余多少
-      let {nowVideo} = this.state;
+      let {nowVideo, videoData} = this.state;
       let controlBtn = this.state.paused
       ? <Icon type={'\ue604'} size="md" color="#fff" />
       : <Icon type={'\ue63D'} size="md" color="#fff" />;
+      let videoListNode = this.getVideoList(videoData);
       // <TouchableOpacity style={{marginTop:50}} onPrsss={()=>{this.video.presentFullscreenPlayer()}}>
       //   <Text style={{color:'#fff'}}>全屏</Text>
       // </TouchableOpacity>
@@ -270,6 +321,7 @@ class Trailer extends Component {
       //   </View>
       return (
         <View style={styles.container}>
+          <ScrollView>
            <TouchableOpacity
              style={[styles.fullScreen, layoutStyles.flexRow]}
              onPress={() => this.setState({ paused: !this.state.paused })}
@@ -346,7 +398,8 @@ class Trailer extends Component {
 
            </View>
 
-
+           {videoListNode}
+          </ScrollView>
          </View>
         )
     }
