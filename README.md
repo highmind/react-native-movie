@@ -74,7 +74,8 @@
 ### 视频播放
   * react-native-video
   * Slider 实现进度条
-
+### 闪屏
+  * react-native-splash-screen
 ### 实现功能
   1. 即将上映
   2. 正在热映

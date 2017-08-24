@@ -1,5 +1,4 @@
 import React,{Component} from 'react';
-
 import {StackNavigator} from 'react-navigation';  //路由导航
 import {Detail, Celebrity, Trailer, FilmList, Review, Search} from '../pages';
 import {Provider} from 'react-redux';

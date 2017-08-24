@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import SplashScreen from 'react-native-splash-screen'
+
 import { Toast } from 'antd-mobile';
 import { layoutStyles } from '../styles/layout';
 import { ListItem } from './';
@@ -66,6 +68,8 @@ class List extends React.PureComponent {
             filmListData :resTxt.subjects,
             filmListTotal: resTxt.total
           })
+
+          SplashScreen.hide();
         }
       }).catch((error) => {
         Toast.info('网络错误', 1);
