@@ -69,7 +69,7 @@ class List extends React.PureComponent {
             filmListTotal: resTxt.total
           })
 
-          // SplashScreen.hide();  //数据加载完成 隐藏 SplashScreen
+          SplashScreen.hide();  //数据加载完成 隐藏 SplashScreen
         }
       }).catch((error) => {
         Toast.info('网络错误', 1);
