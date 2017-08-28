@@ -70,7 +70,7 @@
 ### 安卓打包
    1. 直接打包 有gradle的项目
    ``` javascript
-   ./gradlew assembleRelease
+   cd android && ./gradlew assembleRelease
    ```
    2. 没有gradle的项目
    ``` javascript   
