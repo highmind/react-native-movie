@@ -68,8 +68,13 @@
     * 使用  PureComponent
 
 ### 安卓打包
+   1. 直接打包 有gradle的项目
    ``` javascript
    ./gradlew assembleRelease
+   ```
+   2. 没有gradle的项目
+   ``` javascript   
+   react-native bundle --platform android --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --dev false --reset-cache --assets-dest android/app/src/main/res/  
    ```
 ### 视频播放
   * react-native-video

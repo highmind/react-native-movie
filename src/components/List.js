@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen';
 
 import { Toast } from 'antd-mobile';
 import { layoutStyles } from '../styles/layout';
@@ -69,7 +69,7 @@ class List extends React.PureComponent {
             filmListTotal: resTxt.total
           })
 
-          SplashScreen.hide();
+          // SplashScreen.hide();  //数据加载完成 隐藏 SplashScreen
         }
       }).catch((error) => {
         Toast.info('网络错误', 1);
